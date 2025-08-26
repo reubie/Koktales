@@ -15,14 +15,14 @@ export default function SearchScreen() {
           style={styles.backButton}
           onPress={() => router.back()}
         >
-          <ArrowLeft size={24} color={Colors.white} />
+          <ArrowLeft size={24} color={Colors.typography.primary} />
         </TouchableOpacity>
         <Text style={styles.title}>Search</Text>
         <TouchableOpacity 
           style={styles.filterButton}
-          onPress={() => router.push('/screens/search/filters')}
+          onPress={() => router.push('/search/filters')}
         >
-          <SlidersHorizontal size={24} color={Colors.white} />
+          <SlidersHorizontal size={24} color={Colors.typography.primary} />
         </TouchableOpacity>
       </View>
 
@@ -55,7 +55,7 @@ const styles = StyleSheet.create({
   title: {
     ...Fonts.headline3,
     fontSize: 24,
-    color: Colors.white,
+    color: Colors.typography.primary,
   },
   filterButton: {
     padding: Layout.spacing.sm,

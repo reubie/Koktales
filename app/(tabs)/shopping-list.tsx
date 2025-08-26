@@ -72,12 +72,14 @@ const styles = StyleSheet.create({
     paddingVertical: Layout.spacing.double,
   },
   title: {
-    ...Fonts.headline2,
+    fontFamily: 'Roboto-Bold',
+    fontSize: 24,
     color: Colors.typography.primary,
     marginBottom: Layout.spacing.sm,
   },
   subtitle: {
-    ...Fonts.body1,
+    fontFamily: 'Roboto',
+    fontSize: 16,
     color: Colors.typography.secondary,
   },
   content: {
@@ -100,15 +102,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   itemName: {
-    ...Fonts.body2,
-    color: Colors.typography.primary,
+    fontFamily: 'Roboto-Medium',
     fontSize: 16,
+    color: Colors.typography.primary,
     marginBottom: Layout.spacing.xs,
   },
   itemCategory: {
-    ...Fonts.body3,
-    color: Colors.typography.secondary,
+    fontFamily: 'Roboto',
     fontSize: 13,
+    color: Colors.typography.secondary,
   },
   completedText: {
     textDecorationLine: 'line-through',
@@ -136,9 +138,9 @@ const styles = StyleSheet.create({
     marginBottom: Layout.spacing.double,
   },
   addButtonText: {
-    ...Fonts.body2,
-    color: Colors.typography.primary,
+    fontFamily: 'Roboto-Medium',
     fontSize: 16,
+    color: Colors.typography.primary,
     marginLeft: Layout.spacing.sm,
   },
 });

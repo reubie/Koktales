@@ -101,12 +101,14 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   name: {
-    ...Fonts.headline3,
+    fontFamily: 'Roboto-Bold',
+    fontSize: 20,
     color: Colors.typography.primary,
     marginBottom: Layout.spacing.xs,
   },
   email: {
-    ...Fonts.body1,
+    fontFamily: 'Roboto',
+    fontSize: 16,
     color: Colors.typography.secondary,
   },
   content: {
@@ -117,7 +119,8 @@ const styles = StyleSheet.create({
     marginTop: Layout.spacing.double,
   },
   sectionTitle: {
-    ...Fonts.headline3,
+    fontFamily: 'Roboto-Bold',
+    fontSize: 20,
     color: Colors.typography.primary,
     marginBottom: Layout.spacing.md,
   },
@@ -139,9 +142,9 @@ const styles = StyleSheet.create({
     marginRight: Layout.spacing.md,
   },
   menuText: {
-    ...Fonts.body2,
-    color: Colors.typography.primary,
+    fontFamily: 'Roboto-Medium',
     fontSize: 16,
+    color: Colors.typography.primary,
   },
   logoutButton: {
     flexDirection: 'row',
@@ -154,9 +157,9 @@ const styles = StyleSheet.create({
     marginBottom: Layout.spacing.double,
   },
   logoutText: {
-    ...Fonts.body2,
-    color: Colors.error,
+    fontFamily: 'Roboto-Medium',
     fontSize: 16,
+    color: Colors.error,
     marginLeft: Layout.spacing.sm,
   },
 });

@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
     paddingVertical: Layout.spacing.md,
   },
   title: {
-    ...Fonts.headline2,
+    fontFamily: 'Roboto-Bold',
     fontSize: 32,
     color: Colors.typography.primary,
   },
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     borderBottomColor: Colors.primary,
   },
   tabText: {
-    ...Fonts.button,
+    fontFamily: 'Roboto-Bold',
     fontSize: 16,
     color: Colors.typography.secondary,
   },

@@ -55,12 +55,14 @@ const styles = StyleSheet.create({
     paddingVertical: Layout.spacing.double,
   },
   title: {
-    ...Fonts.headline2,
+    fontFamily: 'Roboto-Bold',
+    fontSize: 24,
     color: Colors.typography.primary,
     marginBottom: Layout.spacing.sm,
   },
   subtitle: {
-    ...Fonts.body1,
+    fontFamily: 'Roboto',
+    fontSize: 16,
     color: Colors.typography.secondary,
   },
   content: {
@@ -80,15 +82,15 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   favoriteName: {
-    ...Fonts.body2,
-    color: Colors.typography.primary,
+    fontFamily: 'Roboto-Medium',
     fontSize: 16,
+    color: Colors.typography.primary,
     marginBottom: Layout.spacing.xs,
   },
   favoriteCategory: {
-    ...Fonts.body3,
-    color: Colors.typography.secondary,
+    fontFamily: 'Roboto',
     fontSize: 13,
+    color: Colors.typography.secondary,
   },
   emptyState: {
     flex: 1,
@@ -97,13 +99,15 @@ const styles = StyleSheet.create({
     paddingVertical: Layout.spacing.quadruple,
   },
   emptyTitle: {
-    ...Fonts.headline3,
+    fontFamily: 'Roboto-Bold',
+    fontSize: 20,
     color: Colors.typography.primary,
     marginTop: Layout.spacing.md,
     marginBottom: Layout.spacing.sm,
   },
   emptySubtitle: {
-    ...Fonts.body1,
+    fontFamily: 'Roboto',
+    fontSize: 16,
     color: Colors.typography.secondary,
     textAlign: 'center',
     paddingHorizontal: Layout.spacing.double,
