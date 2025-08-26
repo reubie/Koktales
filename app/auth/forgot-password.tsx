@@ -1,42 +1,33 @@
-import { View, Text, StyleSheet, TouchableOpacity, TextInput, Alert } from 'react-native';
-import { router } from 'expo-router';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, StatusBar } from 'react-native';
 import { useState } from 'react';
+import { router } from 'expo-router';
 import Colors from '@/constants/Colors';
 import Layout from '@/constants/Layout';
 import Fonts from '@/constants/Fonts';
-import { ArrowLeft } from 'lucide-react-native';
 
 export default function ForgotPasswordScreen() {
   const [email, setEmail] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
 
-  const handleResetPassword = async () => {
-    if (!email) {
-      Alert.alert('Error', 'Please enter your email');
-      return;
-    }
+  const handleResetPassword = () => {
+    // Handle password reset logic
+    router.push('/auth/login');
+  };
 
-    setIsLoading(true);
-    try {
-      // TODO: Implement actual password reset logic
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      Alert.alert('Success', 'Password reset instructions sent to your email');
-      router.back();
-    } catch (error) {
-      Alert.alert('Error', 'Failed to send reset instructions. Please try again.');
-    } finally {
-      setIsLoading(false);
-    }
+  const handleBackToLogin = () => {
+    router.push('/auth/login');
   };
 
   return (
     <View style={styles.container}>
-      <TouchableOpacity 
-        style={styles.backButton}
-        onPress={() => router.back()}
-      >
-        <ArrowLeft size={24} color={Colors.gray[800]} />
-      </TouchableOpacity>
+      <StatusBar barStyle="light-content" backgroundColor={Colors.background} />
+      
+      <View style={styles.header}>
+        <Text style={styles.timeText}>9:41</Text>
+        <View style={styles.statusIcons}>
+          <View style={styles.wifiIcon} />
+          <View style={styles.batteryIcon} />
+        </View>
+      </View>
 
       <View style={styles.content}>
         <Text style={styles.title}>Reset Password</Text>
@@ -46,22 +37,19 @@ export default function ForgotPasswordScreen() {
           <TextInput
             style={styles.input}
             placeholder="Email"
-            placeholderTextColor={Colors.gray[400]}
-            keyboardType="email-address"
-            autoCapitalize="none"
+            placeholderTextColor={Colors.typography.secondary}
             value={email}
             onChangeText={setEmail}
-            editable={!isLoading}
+            autoCapitalize="none"
+            keyboardType="email-address"
           />
 
-          <TouchableOpacity 
-            style={[styles.resetButton, isLoading && styles.resetButtonDisabled]}
-            onPress={handleResetPassword}
-            disabled={isLoading}
-          >
-            <Text style={styles.resetButtonText}>
-              {isLoading ? 'Sending...' : 'Send Reset Instructions'}
-            </Text>
+          <TouchableOpacity style={styles.resetButton} onPress={handleResetPassword}>
+            <Text style={styles.resetButtonText}>Send Reset Link</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.backButton} onPress={handleBackToLogin}>
+            <Text style={styles.backButtonText}>Back to Login</Text>
           </TouchableOpacity>
         </View>
       </View>
@@ -72,57 +60,88 @@ export default function ForgotPasswordScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background.primary,
+    backgroundColor: Colors.background,
   },
-  backButton: {
-    position: 'absolute',
-    top: 60,
-    left: Layout.spacing.lg,
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: Layout.spacing.triple,
+    paddingHorizontal: Layout.spacing.double,
     zIndex: 1,
+  },
+  timeText: {
+    ...Fonts.body2,
+    color: Colors.typography.primary,
+    fontSize: 16,
+  },
+  statusIcons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Layout.spacing.xs,
+  },
+  wifiIcon: {
+    width: 16,
+    height: 12,
+    backgroundColor: Colors.typography.primary,
+    borderRadius: 2,
+  },
+  batteryIcon: {
+    width: 24,
+    height: 12,
+    backgroundColor: Colors.typography.primary,
+    borderRadius: 2,
   },
   content: {
     flex: 1,
-    padding: Layout.spacing.xl,
     justifyContent: 'center',
+    paddingHorizontal: Layout.spacing.double,
   },
   title: {
-    ...Fonts.heading,
-    fontSize: 32,
-    color: Colors.gray[800],
+    ...Fonts.headline2,
+    color: Colors.typography.primary,
+    textAlign: 'center',
     marginBottom: Layout.spacing.sm,
   },
   subtitle: {
-    ...Fonts.body,
-    fontSize: 16,
-    color: Colors.gray[500],
-    marginBottom: Layout.spacing.xl,
+    ...Fonts.body1,
+    color: Colors.typography.secondary,
+    textAlign: 'center',
+    marginBottom: Layout.spacing.quadruple,
   },
   form: {
-    width: '100%',
+    gap: Layout.spacing.md,
   },
   input: {
-    ...Fonts.body,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.entryField,
     borderRadius: Layout.borderRadius.md,
-    padding: Layout.spacing.md,
-    color: Colors.gray[800],
-    marginBottom: Layout.spacing.xl,
+    paddingHorizontal: Layout.spacing.md,
+    paddingVertical: Layout.spacing.md,
+    color: Colors.typography.primary,
     fontSize: 16,
     borderWidth: 1,
-    borderColor: Colors.gray[200],
+    borderColor: Colors.border,
   },
   resetButton: {
-    backgroundColor: Colors.primary[600],
+    backgroundColor: Colors.primary,
+    paddingVertical: Layout.spacing.md,
     borderRadius: Layout.borderRadius.md,
-    padding: Layout.spacing.md,
-    alignItems: 'center',
-  },
-  resetButtonDisabled: {
-    opacity: 0.7,
+    marginTop: Layout.spacing.md,
   },
   resetButtonText: {
     ...Fonts.button,
-    color: Colors.white,
+    color: Colors.typography.primary,
+    textAlign: 'center',
     fontSize: 16,
+  },
+  backButton: {
+    paddingVertical: Layout.spacing.md,
+    marginTop: Layout.spacing.md,
+  },
+  backButtonText: {
+    ...Fonts.body3,
+    color: Colors.primary,
+    textAlign: 'center',
+    fontSize: 13,
   },
 }); 

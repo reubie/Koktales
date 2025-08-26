@@ -1,134 +1,95 @@
-import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { router } from 'expo-router';
 import Colors from '@/constants/Colors';
 import Layout from '@/constants/Layout';
 import Fonts from '@/constants/Fonts';
-import { ArrowLeft } from 'lucide-react-native';
+import { ArrowLeft, Check } from 'lucide-react-native';
+import { router } from 'expo-router';
+import { useState } from 'react';
 
-const strengthOptions = ['Strong', 'Light', 'Non-alcoholic'];
-const groupOptions = ['Classic', 'Hot', 'Dessert', 'Long'];
-const techniqueOptions = [
-  'Shake', 'Hard-shake', 'Stirring',
-  'Throwing', 'Muddling', 'Spanking',
-  'Rolling'
-];
+export default function SearchFiltersScreen() {
+  const [selectedDifficulty, setSelectedDifficulty] = useState<string>('');
+  const [selectedTime, setSelectedTime] = useState<string>('');
 
-export default function FiltersScreen() {
-  const [selectedStrength, setSelectedStrength] = useState<string[]>([]);
-  const [selectedGroups, setSelectedGroups] = useState<string[]>([]);
-  const [selectedTechniques, setSelectedTechniques] = useState<string[]>([]);
+  const difficulties = ['Easy', 'Medium', 'Hard'];
+  const timeRanges = ['Under 5 min', '5-10 min', 'Over 10 min'];
 
-  const toggleSelection = (array: string[], setArray: (value: string[]) => void, item: string) => {
-    if (array.includes(item)) {
-      setArray(array.filter(i => i !== item));
-    } else {
-      setArray([...array, item]);
-    }
+  const handleBack = () => {
+    router.back();
   };
 
-  const clearAll = () => {
-    setSelectedStrength([]);
-    setSelectedGroups([]);
-    setSelectedTechniques([]);
-  };
-
-  const applyFilters = () => {
-    // Apply filters logic here
+  const handleApply = () => {
+    // Handle filter application
     router.back();
   };
 
   return (
     <SafeAreaView style={styles.container}>
+      <StatusBar barStyle="light-content" backgroundColor={Colors.background} />
+      
+      {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity 
-          style={styles.backButton}
-          onPress={() => router.back()}
-        >
-          <ArrowLeft size={24} color={Colors.white} />
+        <TouchableOpacity onPress={handleBack} style={styles.backButton}>
+          <ArrowLeft size={24} color={Colors.typography.primary} />
         </TouchableOpacity>
-        <Text style={styles.title}>Filters</Text>
-      </View>
-
-      <ScrollView style={styles.content}>
-        <Text style={styles.sectionTitle}>Drink strength</Text>
-        <View style={styles.optionsContainer}>
-          {strengthOptions.map((option) => (
-            <TouchableOpacity
-              key={option}
-              style={[
-                styles.optionButton,
-                selectedStrength.includes(option) && styles.selectedOption
-              ]}
-              onPress={() => toggleSelection(selectedStrength, setSelectedStrength, option)}
-            >
-              <Text style={[
-                styles.optionText,
-                selectedStrength.includes(option) && styles.selectedOptionText
-              ]}>
-                {option}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-
-        <Text style={styles.sectionTitle}>Group</Text>
-        <View style={styles.optionsContainer}>
-          {groupOptions.map((option) => (
-            <TouchableOpacity
-              key={option}
-              style={[
-                styles.optionButton,
-                selectedGroups.includes(option) && styles.selectedOption
-              ]}
-              onPress={() => toggleSelection(selectedGroups, setSelectedGroups, option)}
-            >
-              <Text style={[
-                styles.optionText,
-                selectedGroups.includes(option) && styles.selectedOptionText
-              ]}>
-                {option}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-
-        <Text style={styles.sectionTitle}>Techniques</Text>
-        <View style={styles.optionsContainer}>
-          {techniqueOptions.map((option) => (
-            <TouchableOpacity
-              key={option}
-              style={[
-                styles.optionButton,
-                selectedTechniques.includes(option) && styles.selectedOption
-              ]}
-              onPress={() => toggleSelection(selectedTechniques, setSelectedTechniques, option)}
-            >
-              <Text style={[
-                styles.optionText,
-                selectedTechniques.includes(option) && styles.selectedOptionText
-              ]}>
-                {option}
-              </Text>
-            </TouchableOpacity>
-          ))}
-        </View>
-      </ScrollView>
-
-      <View style={styles.footer}>
-        <TouchableOpacity 
-          style={styles.clearButton}
-          onPress={clearAll}
-        >
-          <Text style={styles.clearButtonText}>Clear</Text>
-        </TouchableOpacity>
-        
-        <TouchableOpacity 
-          style={styles.applyButton}
-          onPress={applyFilters}
-        >
+        <Text style={styles.headerTitle}>Filters</Text>
+        <TouchableOpacity onPress={handleApply} style={styles.applyButton}>
           <Text style={styles.applyButtonText}>Apply</Text>
         </TouchableOpacity>
+      </View>
+
+      <View style={styles.content}>
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Difficulty</Text>
+          <View style={styles.optionsContainer}>
+            {difficulties.map((difficulty) => (
+              <TouchableOpacity
+                key={difficulty}
+                style={[
+                  styles.option,
+                  selectedDifficulty === difficulty && styles.selectedOption
+                ]}
+                onPress={() => setSelectedDifficulty(difficulty)}
+              >
+                <Text style={[
+                  styles.optionText,
+                  selectedDifficulty === difficulty && styles.selectedOptionText
+                ]}>
+                  {difficulty}
+                </Text>
+                {selectedDifficulty === difficulty && (
+                  <Check size={16} color={Colors.typography.primary} />
+                )}
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
+
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Preparation Time</Text>
+          <View style={styles.optionsContainer}>
+            {timeRanges.map((time) => (
+              <TouchableOpacity
+                key={time}
+                style={[
+                  styles.option,
+                  selectedTime === time && styles.selectedOption
+                ]}
+                onPress={() => setSelectedTime(time)}
+              >
+                <Text style={[
+                  styles.optionText,
+                  selectedTime === time && styles.selectedOptionText
+                ]}>
+                  {time}
+                </Text>
+                {selectedTime === time && (
+                  <Check size={16} color={Colors.typography.primary} />
+                )}
+              </TouchableOpacity>
+            ))}
+          </View>
+        </View>
       </View>
     </SafeAreaView>
   );
@@ -137,85 +98,63 @@ export default function FiltersScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background.dark,
+    backgroundColor: Colors.background,
   },
   header: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    padding: Layout.spacing.lg,
+    paddingTop: Layout.spacing.triple,
+    paddingHorizontal: Layout.spacing.double,
+    paddingBottom: Layout.spacing.md,
   },
   backButton: {
-    marginRight: Layout.spacing.md,
+    padding: Layout.spacing.sm,
   },
-  title: {
-    ...Fonts.heading,
-    fontSize: 24,
-    color: Colors.white,
+  headerTitle: {
+    ...Fonts.headline3,
+    color: Colors.typography.primary,
+  },
+  applyButton: {
+    padding: Layout.spacing.sm,
+  },
+  applyButtonText: {
+    ...Fonts.body2,
+    color: Colors.primary,
+    fontSize: 16,
   },
   content: {
     flex: 1,
-    padding: Layout.spacing.lg,
+    paddingHorizontal: Layout.spacing.double,
+  },
+  section: {
+    marginTop: Layout.spacing.double,
   },
   sectionTitle: {
-    ...Fonts.subheading,
-    fontSize: 18,
-    color: Colors.white,
+    ...Fonts.headline3,
+    color: Colors.typography.primary,
     marginBottom: Layout.spacing.md,
   },
   optionsContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginBottom: Layout.spacing.xl,
+    gap: Layout.spacing.sm,
   },
-  optionButton: {
-    backgroundColor: Colors.gray[800],
-    paddingVertical: Layout.spacing.sm,
-    paddingHorizontal: Layout.spacing.md,
-    borderRadius: Layout.borderRadius.full,
-    marginRight: Layout.spacing.sm,
-    marginBottom: Layout.spacing.sm,
+  option: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: Colors.surface,
+    padding: Layout.spacing.md,
+    borderRadius: Layout.borderRadius.md,
   },
   selectedOption: {
-    backgroundColor: Colors.secondary[500],
+    backgroundColor: Colors.primary,
   },
   optionText: {
-    ...Fonts.button,
-    fontSize: 14,
-    color: Colors.gray[400],
+    ...Fonts.body2,
+    color: Colors.typography.primary,
+    fontSize: 16,
   },
   selectedOptionText: {
-    color: Colors.white,
-  },
-  footer: {
-    flexDirection: 'row',
-    padding: Layout.spacing.lg,
-    borderTopWidth: 1,
-    borderTopColor: Colors.gray[800],
-  },
-  clearButton: {
-    flex: 1,
-    paddingVertical: Layout.spacing.md,
-    marginRight: Layout.spacing.md,
-    borderRadius: Layout.borderRadius.md,
-    borderWidth: 1,
-    borderColor: Colors.secondary[500],
-    alignItems: 'center',
-  },
-  clearButtonText: {
-    ...Fonts.button,
-    fontSize: 16,
-    color: Colors.secondary[500],
-  },
-  applyButton: {
-    flex: 1,
-    paddingVertical: Layout.spacing.md,
-    backgroundColor: Colors.secondary[500],
-    borderRadius: Layout.borderRadius.md,
-    alignItems: 'center',
-  },
-  applyButtonText: {
-    ...Fonts.button,
-    fontSize: 16,
-    color: Colors.white,
+    color: Colors.typography.primary,
   },
 });

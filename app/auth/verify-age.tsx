@@ -1,13 +1,12 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
+import { useState } from 'react';
+import { View, Text, StyleSheet, TouchableOpacity, Image, StatusBar } from 'react-native';
 import { router } from 'expo-router';
 import Colors from '@/constants/Colors';
 import Layout from '@/constants/Layout';
 import Fonts from '@/constants/Fonts';
 
 export default function VerifyAgeScreen() {
-  const handleVerify = () => {
-    router.push('/auth/signup');
-  };
+  const [isAgeVerified, setIsAgeVerified] = useState(false);
 
   const handleContinueWithGoogle = () => {
     router.push('/subscription');
@@ -27,6 +26,17 @@ export default function VerifyAgeScreen() {
 
   return (
     <View style={styles.container}>
+      <StatusBar barStyle="light-content" backgroundColor={Colors.background} />
+      
+      {/* Header with time and status icons */}
+      <View style={styles.header}>
+        <Text style={styles.timeText}>9:41</Text>
+        <View style={styles.statusIcons}>
+          <View style={styles.wifiIcon} />
+          <View style={styles.batteryIcon} />
+        </View>
+      </View>
+
       <Image
         source={{ uri: 'https://images.pexels.com/photos/2480828/pexels-photo-2480828.jpeg' }}
         style={StyleSheet.absoluteFillObject}
@@ -36,8 +46,14 @@ export default function VerifyAgeScreen() {
       <View style={styles.content}>
         <Text style={styles.title}>Before we start are you older than 18 y.o?</Text>
         
-        <TouchableOpacity style={styles.verifyButton} onPress={handleVerify}>
-          <Text style={styles.verifyButtonText}>I have already 18 years old</Text>
+        <TouchableOpacity 
+          style={styles.checkboxContainer} 
+          onPress={() => setIsAgeVerified(!isAgeVerified)}
+        >
+          <View style={[styles.checkbox, isAgeVerified && styles.checkboxChecked]}>
+            {isAgeVerified && <Text style={styles.checkmark}>✓</Text>}
+          </View>
+          <Text style={styles.checkboxText}>I have already 18 years old</Text>
         </TouchableOpacity>
 
         <TouchableOpacity style={styles.socialButton} onPress={handleContinueWithGoogle}>
@@ -48,8 +64,8 @@ export default function VerifyAgeScreen() {
           <Text style={styles.socialButtonText}>Continue with Apple</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.skipButton} onPress={handleContinueWithoutAuth}>
-          <Text style={styles.skipButtonText}>Continue w/o authorize</Text>
+        <TouchableOpacity style={styles.primaryButton} onPress={handleContinueWithoutAuth}>
+          <Text style={styles.primaryButtonText}>Continue w/o authorize</Text>
         </TouchableOpacity>
 
         <View style={styles.loginContainer}>
@@ -60,7 +76,7 @@ export default function VerifyAgeScreen() {
         </View>
 
         <Text style={styles.termsText}>
-          By continuing you agree to our Terms and Privacy Policy
+          By continuing, you agree to our Terms and Privacy Policy
         </Text>
       </View>
     </View>
@@ -70,78 +86,126 @@ export default function VerifyAgeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background.dark,
+    backgroundColor: Colors.background,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: Layout.spacing.triple,
+    paddingHorizontal: Layout.spacing.double,
+    zIndex: 1,
+  },
+  timeText: {
+    ...Fonts.body2,
+    color: Colors.typography.primary,
+    fontSize: 16,
+  },
+  statusIcons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Layout.spacing.xs,
+  },
+  wifiIcon: {
+    width: 16,
+    height: 12,
+    backgroundColor: Colors.typography.primary,
+    borderRadius: 2,
+  },
+  batteryIcon: {
+    width: 24,
+    height: 12,
+    backgroundColor: Colors.typography.primary,
+    borderRadius: 2,
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
+    backgroundColor: 'rgba(14, 14, 14, 0.7)',
   },
   content: {
     flex: 1,
     justifyContent: 'flex-end',
-    padding: Layout.spacing.xl,
-    paddingBottom: Layout.spacing.xxl,
+    padding: Layout.spacing.double,
+    paddingBottom: Layout.spacing.quadruple,
   },
   title: {
-    ...Fonts.heading,
-    fontSize: 32,
-    color: Colors.white,
-    marginBottom: Layout.spacing.xl,
+    ...Fonts.headline2,
+    color: Colors.typography.primary,
+    marginBottom: Layout.spacing.double,
     textAlign: 'center',
   },
-  verifyButton: {
-    backgroundColor: Colors.secondary[500],
-    paddingVertical: Layout.spacing.md,
-    borderRadius: Layout.borderRadius.md,
-    marginBottom: Layout.spacing.md,
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: Layout.spacing.double,
+    paddingHorizontal: Layout.spacing.md,
   },
-  verifyButtonText: {
-    ...Fonts.button,
-    color: Colors.white,
-    textAlign: 'center',
+  checkbox: {
+    width: 20,
+    height: 20,
+    borderRadius: 4,
+    backgroundColor: Colors.typography.primary,
+    marginRight: Layout.spacing.md,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  checkboxChecked: {
+    backgroundColor: Colors.primary,
+  },
+  checkmark: {
+    color: Colors.typography.primary,
+    fontSize: 14,
+    fontWeight: 'bold',
+  },
+  checkboxText: {
+    ...Fonts.body2,
+    color: Colors.typography.primary,
     fontSize: 16,
   },
   socialButton: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.typography.primary,
     paddingVertical: Layout.spacing.md,
     borderRadius: Layout.borderRadius.md,
     marginBottom: Layout.spacing.md,
   },
   socialButtonText: {
     ...Fonts.button,
-    color: Colors.gray[800],
+    color: Colors.primary,
     textAlign: 'center',
     fontSize: 16,
   },
-  skipButton: {
+  primaryButton: {
+    backgroundColor: Colors.primary,
     paddingVertical: Layout.spacing.md,
-    marginBottom: Layout.spacing.xl,
+    borderRadius: Layout.borderRadius.md,
+    marginBottom: Layout.spacing.double,
   },
-  skipButtonText: {
+  primaryButtonText: {
     ...Fonts.button,
-    color: Colors.white,
+    color: Colors.typography.primary,
     textAlign: 'center',
     fontSize: 16,
   },
   loginContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginBottom: Layout.spacing.xl,
+    marginBottom: Layout.spacing.double,
   },
   loginText: {
-    ...Fonts.body,
-    color: Colors.gray[400],
-    fontSize: 14,
+    ...Fonts.body3,
+    color: Colors.typography.primary,
+    fontSize: 13,
   },
   loginLink: {
-    ...Fonts.button,
-    color: Colors.secondary[500],
-    fontSize: 14,
+    ...Fonts.body4,
+    color: Colors.primary,
+    fontSize: 13,
   },
   termsText: {
-    ...Fonts.caption,
-    color: Colors.gray[400],
+    ...Fonts.body5,
+    color: Colors.typography.primary,
     textAlign: 'center',
-    fontSize: 12,
+    fontSize: 10,
+    opacity: 0.8,
   },
 });

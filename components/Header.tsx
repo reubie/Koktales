@@ -25,12 +25,12 @@ export default function Header({
     <View style={styles.container}>
       {onBackPress && (
         <TouchableOpacity onPress={onBackPress} style={styles.backButton}>
-          <ArrowLeft size={24} color={Colors.gray[800]} />
+          <ArrowLeft size={24} color={Colors.typography.secondary} />
         </TouchableOpacity>
       )}
       {onMenuPress && (
         <TouchableOpacity onPress={onMenuPress} style={styles.menuButton}>
-          <Menu size={24} color={Colors.gray[800]} />
+          <Menu size={24} color={Colors.typography.secondary} />
         </TouchableOpacity>
       )}
 
@@ -41,7 +41,7 @@ export default function Header({
 
       {showNotification && onNotificationPress && (
         <TouchableOpacity onPress={onNotificationPress} style={styles.notificationButton}>
-          <Bell size={24} color={Colors.gray[800]} />
+          <Bell size={24} color={Colors.typography.secondary} />
           <View style={styles.notificationBadge} />
         </TouchableOpacity>
       )}
@@ -56,9 +56,9 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     paddingHorizontal: Layout.spacing.lg,
     paddingVertical: Layout.spacing.md,
-    backgroundColor: Colors.background.secondary,
+    backgroundColor: Colors.surface,
     borderBottomWidth: 1,
-    borderBottomColor: Colors.gray[200],
+    borderBottomColor: Colors.border,
   },
   backButton: {
     padding: Layout.spacing.sm,
@@ -71,16 +71,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   title: {
-    ...Fonts.heading,
+    ...Fonts.headline3,
     fontSize: 18,
-    color: Colors.gray[800],
+    color: Colors.typography.primary,
   },
-  subtitle: {
-    ...Fonts.body,
-    fontSize: 14,
-    color: Colors.gray[500],
-    marginTop: 2,
-  },
+    subtitle: {
+      ...Fonts.body1,
+      fontSize: 14,
+      color: Colors.typography.secondary,
+      marginTop: 2,
+    },
   notificationButton: {
     padding: Layout.spacing.sm,
     position: 'relative',
@@ -92,6 +92,6 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: Colors.secondary[500],
+    backgroundColor: Colors.primary,
   },
 });

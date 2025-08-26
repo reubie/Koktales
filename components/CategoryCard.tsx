@@ -53,9 +53,9 @@ const styles = StyleSheet.create({
     padding: Layout.spacing.md,
   },
   name: {
-    ...Fonts.subheading,
+    ...Fonts.headline3,
     fontSize: 18,
-    color: Colors.white,
+    color: Colors.typography.primary,
     marginBottom: Layout.spacing.xs,
   },
   countContainer: {
@@ -66,8 +66,8 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
   },
   count: {
-    ...Fonts.caption,
+    ...Fonts.body3,
     fontSize: 12,
-    color: Colors.white,
+    color: Colors.typography.primary,
   },
 });

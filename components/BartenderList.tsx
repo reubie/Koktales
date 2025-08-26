@@ -1,114 +1,88 @@
-import { View, Text, StyleSheet, Image, TouchableOpacity, FlatList } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import { router } from 'expo-router';
 import Colors from '@/constants/Colors';
 import Layout from '@/constants/Layout';
 import Fonts from '@/constants/Fonts';
-import { MapPin } from 'lucide-react-native';
-
-type Bartender = {
-  id: string;
-  name: string;
-  image: string;
-  location: string;
-  bar: string;
-  experience: string;
-};
-
-const bartenders: Bartender[] = [
-  {
-    id: '1',
-    name: 'Adam White',
-    image: 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg',
-    location: 'Florida, USA',
-    bar: 'White Wolf bar',
-    experience: '5 years',
-  },
-  {
-    id: '2',
-    name: 'Samanta Green',
-    image: 'https://images.pexels.com/photos/3214779/pexels-photo-3214779.jpeg',
-    location: 'Paris, France',
-    bar: 'White Wolf bar',
-    experience: '3 years',
-  },
-  // Add more bartenders
-];
+import { User, MapPin } from 'lucide-react-native';
 
 export default function BartenderList() {
-  const renderItem = ({ item }: { item: Bartender }) => (
-    <TouchableOpacity 
-      style={styles.bartenderCard}
-      onPress={() => router.push(`/discover/bartender/${item.id}`)}
-    >
-      <Image source={{ uri: item.image }} style={styles.bartenderImage} />
-      <View style={styles.bartenderInfo}>
-        <Text style={styles.bartenderName}>{item.name}</Text>
-        <Text style={styles.bartenderBar}>{item.bar}</Text>
-        <View style={styles.locationContainer}>
-          <MapPin size={14} color={Colors.gray[400]} />
-          <Text style={styles.locationText}>{item.location}</Text>
-        </View>
-        <Text style={styles.experienceText}>{item.experience} of exp</Text>
-      </View>
-    </TouchableOpacity>
-  );
+  const bartenders = [
+    { id: '1', name: 'Adam White', location: 'Florida, USA', experience: '5 years' },
+    { id: '2', name: 'Samanta Green', location: 'Paris, France', experience: '3 years' },
+    { id: '3', name: 'Mike Johnson', location: 'New York, USA', experience: '7 years' },
+  ];
+
+  const handleBartenderPress = (id: string) => {
+    router.push(`/discover/bartender/${id}`);
+  };
 
   return (
-    <FlatList
-      data={bartenders}
-      renderItem={renderItem}
-      keyExtractor={(item) => item.id}
-      contentContainerStyle={styles.container}
-    />
+    <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
+      {bartenders.map((bartender) => (
+        <TouchableOpacity
+          key={bartender.id}
+          style={styles.bartenderCard}
+          onPress={() => handleBartenderPress(bartender.id)}
+        >
+          <View style={styles.avatar}>
+            <User size={24} color={Colors.primary} />
+          </View>
+          <View style={styles.info}>
+            <Text style={styles.name}>{bartender.name}</Text>
+            <View style={styles.locationContainer}>
+              <MapPin size={14} color={Colors.typography.secondary} />
+              <Text style={styles.location}>{bartender.location}</Text>
+            </View>
+            <Text style={styles.experience}>{bartender.experience} experience</Text>
+          </View>
+        </TouchableOpacity>
+      ))}
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    padding: Layout.spacing.lg,
+    padding: Layout.spacing.double,
   },
   bartenderCard: {
     flexDirection: 'row',
-    backgroundColor: Colors.gray[900],
-    borderRadius: Layout.borderRadius.lg,
+    alignItems: 'center',
+    backgroundColor: Colors.surface,
     padding: Layout.spacing.md,
+    borderRadius: Layout.borderRadius.md,
     marginBottom: Layout.spacing.md,
   },
-  bartenderImage: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
+  avatar: {
+    width: 50,
+    height: 50,
+    borderRadius: 25,
+    backgroundColor: Colors.entryField,
+    justifyContent: 'center',
+    alignItems: 'center',
     marginRight: Layout.spacing.md,
   },
-  bartenderInfo: {
+  info: {
     flex: 1,
   },
-  bartenderName: {
-    ...Fonts.subheading,
-    fontSize: 16,
-    color: Colors.white,
-    marginBottom: 2,
-  },
-  bartenderBar: {
-    ...Fonts.body,
-    fontSize: 14,
-    color: Colors.gray[400],
-    marginBottom: 4,
+  name: {
+    ...Fonts.headline3,
+    color: Colors.typography.primary,
+    marginBottom: Layout.spacing.xs,
   },
   locationContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 2,
+    marginBottom: Layout.spacing.xs,
   },
-  locationText: {
-    ...Fonts.caption,
-    fontSize: 12,
-    color: Colors.gray[400],
-    marginLeft: 4,
+  location: {
+    ...Fonts.body3,
+    color: Colors.typography.secondary,
+    marginLeft: Layout.spacing.xs,
   },
-  experienceText: {
-    ...Fonts.caption,
+  experience: {
+    ...Fonts.body3,
+    color: Colors.primary,
     fontSize: 12,
-    color: Colors.gray[500],
   },
 });

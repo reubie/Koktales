@@ -2,13 +2,13 @@ import { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import Colors from '../../../constants/Colors';
-import Layout from '../../../constants/Layout';
-import Fonts from '../../../constants/Fonts';
-import SearchBar from '../../../components/SearchBar';
-import BartenderList from '../../../components/BartenderList';
-import BarList from '../../../components/BarList';
-import ArticleList from '../../../components/ArticleList';
+import Colors from '@/constants/Colors';
+import Layout from '@/constants/Layout';
+import Fonts from '@/constants/Fonts';
+import SearchBar from '@/components/SearchBar';
+import BartenderList from '@/components/BartenderList';
+import BarList from '@/components/BarList';
+import ArticleList from '@/components/ArticleList';
 import { Search } from 'lucide-react-native';
 
 export default function DiscoverScreen() {
@@ -20,15 +20,15 @@ export default function DiscoverScreen() {
         <Text style={styles.title}>Discover</Text>
         <TouchableOpacity 
           style={styles.searchButton}
-          onPress={() => router.push('/screens/search')}
+          onPress={() => router.push('/search')}
         >
-          <Search size={24} color={Colors.white} />
+          <Search size={24} color={Colors.typography.primary} />
         </TouchableOpacity>
       </View>
 
       <SearchBar 
         placeholder="Search for bars, bartenders, or articles"
-        onFilterPress={() => router.push('/screens/search/filters')}
+        onFilterPress={() => router.push('/search/filters')}
       />
       
       <View style={styles.tabContainer}>
@@ -74,7 +74,7 @@ export default function DiscoverScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background.dark,
+    backgroundColor: Colors.background,
   },
   header: {
     flexDirection: 'row',
@@ -84,9 +84,9 @@ const styles = StyleSheet.create({
     paddingVertical: Layout.spacing.md,
   },
   title: {
-    ...Fonts.heading,
+    ...Fonts.headline2,
     fontSize: 32,
-    color: Colors.white,
+    color: Colors.typography.primary,
   },
   searchButton: {
     padding: Layout.spacing.sm,
@@ -102,15 +102,15 @@ const styles = StyleSheet.create({
   },
   activeTab: {
     borderBottomWidth: 2,
-    borderBottomColor: Colors.secondary[500],
+    borderBottomColor: Colors.primary,
   },
   tabText: {
     ...Fonts.button,
     fontSize: 16,
-    color: Colors.gray[400],
+    color: Colors.typography.secondary,
   },
   activeTabText: {
-    color: Colors.secondary[500],
+    color: Colors.primary,
   },
   content: {
     flex: 1,

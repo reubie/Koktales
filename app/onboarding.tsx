@@ -1,34 +1,27 @@
 import { useState, useRef } from 'react';
-import { View, Text, StyleSheet, FlatList, Dimensions, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, FlatList, Dimensions, TouchableOpacity, Image, StatusBar } from 'react-native';
 import { router } from 'expo-router';
 import Colors from '@/constants/Colors';
 import Layout from '@/constants/Layout';
 import Fonts from '@/constants/Fonts';
-import { Glasses as Glass, FileLock as Cocktail, Compass } from 'lucide-react-native';
 
 const { width } = Dimensions.get('window');
 
 const slides = [
   {
     id: '1',
-    title: 'Discover Cocktails',
-    description: 'Explore hundreds of cocktail recipes from classics to new creations.',
+    title: 'Explore new cocktail recipes',
     image: 'https://images.pexels.com/photos/613037/pexels-photo-613037.jpeg',
-    icon: (props: any) => <Cocktail {...props} />
   },
   {
     id: '2',
-    title: 'Find Your Perfect Mix',
-    description: 'Filter by ingredients, difficulty, and preferences to find your ideal drink.',
+    title: 'Know cocktails as a new art',
     image: 'https://images.pexels.com/photos/5947024/pexels-photo-5947024.jpeg',
-    icon: (props: any) => <Compass {...props} />
   },
   {
     id: '3',
-    title: 'Mix Like a Pro',
-    description: 'Follow step-by-step instructions to create perfect cocktails every time.',
+    title: 'Share your favorite cocktail recipes',
     image: 'https://images.pexels.com/photos/4021983/pexels-photo-4021983.jpeg',
-    icon: (props: any) => <Glass {...props} />
   }
 ];
 
@@ -41,12 +34,39 @@ export default function OnboardingScreen() {
       <View style={styles.slide}>
         <Image source={{ uri: item.image }} style={styles.image} />
         <View style={styles.overlay} />
-        <View style={styles.iconContainer}>
-          <item.icon size={52} color={Colors.white} />
+        
+        {/* Header with time and skip button */}
+        <View style={styles.header}>
+          <Text style={styles.timeText}>9:41</Text>
+          <View style={styles.statusIcons}>
+            <View style={styles.wifiIcon} />
+            <View style={styles.batteryIcon} />
+          </View>
+          <TouchableOpacity onPress={() => router.push('/auth/verify-age')} style={styles.skipButton}>
+            <Text style={styles.skipButtonText}>Skip</Text>
+          </TouchableOpacity>
         </View>
+
         <View style={styles.textContainer}>
           <Text style={styles.title}>{item.title}</Text>
-          <Text style={styles.description}>{item.description}</Text>
+        </View>
+
+        <View style={styles.footer}>
+          <TouchableOpacity onPress={handleNext} style={styles.nextButton}>
+            <Text style={styles.nextButtonText}>Next</Text>
+          </TouchableOpacity>
+          
+          <View style={styles.indicators}>
+            {slides.map((_, index) => (
+              <View
+                key={index}
+                style={[
+                  styles.indicator,
+                  index === currentIndex && styles.activeIndicator
+                ]}
+              />
+            ))}
+          </View>
         </View>
       </View>
     );
@@ -59,16 +79,13 @@ export default function OnboardingScreen() {
         animated: true
       });
     } else {
-      router.replace('/(tabs)');
+      router.push('/auth/verify-age');
     }
-  };
-
-  const handleSkip = () => {
-    router.replace('/(tabs)');
   };
 
   return (
     <View style={styles.container}>
+      <StatusBar barStyle="light-content" backgroundColor={Colors.background} />
       <FlatList
         ref={flatListRef}
         data={slides}
@@ -82,32 +99,6 @@ export default function OnboardingScreen() {
           setCurrentIndex(index);
         }}
       />
-
-      <View style={styles.footer}>
-        <View style={styles.indicators}>
-          {slides.map((_, index) => (
-            <View
-              key={index}
-              style={[
-                styles.indicator,
-                index === currentIndex && styles.activeIndicator
-              ]}
-            />
-          ))}
-        </View>
-
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity onPress={handleSkip} style={styles.skipButton}>
-            <Text style={styles.skipButtonText}>Skip</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity onPress={handleNext} style={styles.nextButton}>
-            <Text style={styles.nextButtonText}>
-              {currentIndex === slides.length - 1 ? 'Get Started' : 'Next'}
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
     </View>
   );
 }
@@ -115,13 +106,12 @@ export default function OnboardingScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.primary[800],
+    backgroundColor: Colors.background,
   },
   slide: {
     width,
     height: '100%',
-    justifyContent: 'center',
-    alignItems: 'center',
+    justifyContent: 'space-between',
   },
   image: {
     ...StyleSheet.absoluteFillObject,
@@ -131,82 +121,90 @@ const styles = StyleSheet.create({
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(75, 29, 149, 0.7)', // purple-900 with opacity
+    backgroundColor: 'rgba(14, 14, 14, 0.3)',
   },
-  iconContainer: {
-    width: 104,
-    height: 104,
-    borderRadius: 52,
-    backgroundColor: Colors.primary[600],
-    justifyContent: 'center',
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: Layout.spacing.xl,
+    paddingTop: Layout.spacing.triple,
+    paddingHorizontal: Layout.spacing.double,
+    zIndex: 1,
+  },
+  timeText: {
+    ...Fonts.body2,
+    color: Colors.typography.primary,
+    fontSize: 16,
+  },
+  statusIcons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Layout.spacing.xs,
+  },
+  wifiIcon: {
+    width: 16,
+    height: 12,
+    backgroundColor: Colors.typography.primary,
+    borderRadius: 2,
+  },
+  batteryIcon: {
+    width: 24,
+    height: 12,
+    backgroundColor: Colors.typography.primary,
+    borderRadius: 2,
+  },
+  skipButton: {
+    paddingVertical: Layout.spacing.sm,
+    paddingHorizontal: Layout.spacing.md,
+  },
+  skipButtonText: {
+    ...Fonts.body2,
+    color: Colors.typography.primary,
+    fontSize: 16,
   },
   textContainer: {
-    paddingHorizontal: Layout.spacing.xl,
+    flex: 1,
+    justifyContent: 'center',
     alignItems: 'center',
+    paddingHorizontal: Layout.spacing.double,
   },
   title: {
-    ...Fonts.heading,
-    fontSize: 28,
-    color: Colors.white,
-    marginBottom: Layout.spacing.md,
+    ...Fonts.headline2,
+    color: Colors.typography.primary,
     textAlign: 'center',
-  },
-  description: {
-    ...Fonts.body,
-    fontSize: 16,
-    color: Colors.white,
-    textAlign: 'center',
-    opacity: 0.9,
-    lineHeight: 24,
+    maxWidth: width * 0.8,
   },
   footer: {
-    position: 'absolute',
-    bottom: 0,
-    left: 0,
-    right: 0,
-    paddingHorizontal: Layout.spacing.xl,
-    paddingBottom: Layout.spacing.xxl,
+    paddingHorizontal: Layout.spacing.double,
+    paddingBottom: Layout.spacing.quadruple,
+    alignItems: 'center',
+  },
+  nextButton: {
+    backgroundColor: Colors.primary,
+    paddingVertical: Layout.spacing.md,
+    paddingHorizontal: Layout.spacing.quadruple,
+    borderRadius: Layout.borderRadius.md,
+    marginBottom: Layout.spacing.double,
+    minWidth: 120,
+  },
+  nextButtonText: {
+    ...Fonts.button,
+    color: Colors.typography.primary,
+    fontSize: 16,
+    textAlign: 'center',
   },
   indicators: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginBottom: Layout.spacing.xl,
+    gap: Layout.spacing.sm,
   },
   indicator: {
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: Colors.gray[400],
-    marginHorizontal: Layout.spacing.xs,
+    backgroundColor: Colors.typography.secondary,
   },
   activeIndicator: {
-    width: 20,
-    backgroundColor: Colors.white,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  skipButton: {
-    paddingVertical: Layout.spacing.md,
-  },
-  skipButtonText: {
-    ...Fonts.button,
-    color: Colors.white,
-    fontSize: 16,
-  },
-  nextButton: {
-    backgroundColor: Colors.secondary[500],
-    paddingVertical: Layout.spacing.md,
-    paddingHorizontal: Layout.spacing.xl,
-    borderRadius: Layout.borderRadius.md,
-  },
-  nextButtonText: {
-    ...Fonts.button,
-    color: Colors.white,
-    fontSize: 16,
+    backgroundColor: Colors.typography.primary,
   },
 });

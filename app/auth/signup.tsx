@@ -1,83 +1,79 @@
-import { View, Text, StyleSheet, TouchableOpacity, Image, TextInput } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, StatusBar } from 'react-native';
+import { useState } from 'react';
 import { router } from 'expo-router';
 import Colors from '@/constants/Colors';
 import Layout from '@/constants/Layout';
 import Fonts from '@/constants/Fonts';
-import { ArrowLeft } from 'lucide-react-native';
 
-export default function SignUpScreen() {
+export default function SignupScreen() {
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+
+  const handleSignup = () => {
+    // Handle signup logic
+    router.push('/(tabs)');
+  };
+
+  const handleLogin = () => {
+    router.push('/auth/login');
+  };
+
   return (
     <View style={styles.container}>
-      <Image
-        source={{ uri: 'https://images.pexels.com/photos/4021983/pexels-photo-4021983.jpeg' }}
-        style={StyleSheet.absoluteFillObject}
-      />
-      <View style={styles.overlay} />
+      <StatusBar barStyle="light-content" backgroundColor={Colors.background} />
       
-      <TouchableOpacity 
-        style={styles.backButton}
-        onPress={() => router.back()}
-      >
-        <ArrowLeft size={24} color={Colors.white} />
-      </TouchableOpacity>
+      <View style={styles.header}>
+        <Text style={styles.timeText}>9:41</Text>
+        <View style={styles.statusIcons}>
+          <View style={styles.wifiIcon} />
+          <View style={styles.batteryIcon} />
+        </View>
+      </View>
 
       <View style={styles.content}>
         <Text style={styles.title}>Create Account</Text>
-        <Text style={styles.subtitle}>Join our cocktail community</Text>
+        <Text style={styles.subtitle}>Join us and start mixing</Text>
 
         <View style={styles.form}>
           <TextInput
             style={styles.input}
             placeholder="Full Name"
-            placeholderTextColor={Colors.gray[400]}
+            placeholderTextColor={Colors.typography.secondary}
+            value={name}
+            onChangeText={setName}
+            autoCapitalize="words"
           />
+          
           <TextInput
             style={styles.input}
             placeholder="Email"
-            placeholderTextColor={Colors.gray[400]}
-            keyboardType="email-address"
+            placeholderTextColor={Colors.typography.secondary}
+            value={email}
+            onChangeText={setEmail}
             autoCapitalize="none"
+            keyboardType="email-address"
           />
+          
           <TextInput
             style={styles.input}
             placeholder="Password"
-            placeholderTextColor={Colors.gray[400]}
-            secureTextEntry
-          />
-          <TextInput
-            style={styles.input}
-            placeholder="Confirm Password"
-            placeholderTextColor={Colors.gray[400]}
+            placeholderTextColor={Colors.typography.secondary}
+            value={password}
+            onChangeText={setPassword}
             secureTextEntry
           />
 
-          <TouchableOpacity 
-            style={styles.signupButton}
-            onPress={() => router.push('/subscription')}
-          >
+          <TouchableOpacity style={styles.signupButton} onPress={handleSignup}>
             <Text style={styles.signupButtonText}>Create Account</Text>
           </TouchableOpacity>
 
-          <View style={styles.divider}>
-            <View style={styles.dividerLine} />
-            <Text style={styles.dividerText}>OR</Text>
-            <View style={styles.dividerLine} />
+          <View style={styles.loginContainer}>
+            <Text style={styles.loginText}>Already have an account? </Text>
+            <TouchableOpacity onPress={handleLogin}>
+              <Text style={styles.loginLink}>Sign In</Text>
+            </TouchableOpacity>
           </View>
-
-          <TouchableOpacity style={styles.socialButton}>
-            <Text style={styles.socialButtonText}>Continue with Google</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.socialButton}>
-            <Text style={styles.socialButtonText}>Continue with Apple</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.footer}>
-          <Text style={styles.footerText}>Already have an account? </Text>
-          <TouchableOpacity onPress={() => router.push('/auth/login')}>
-            <Text style={styles.footerLink}>Sign In</Text>
-          </TouchableOpacity>
         </View>
       </View>
     </View>
@@ -87,99 +83,93 @@ export default function SignUpScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background.dark,
+    backgroundColor: Colors.background,
   },
-  overlay: {
-    ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0, 0, 0, 0.7)',
-  },
-  backButton: {
-    position: 'absolute',
-    top: 60,
-    left: Layout.spacing.lg,
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: Layout.spacing.triple,
+    paddingHorizontal: Layout.spacing.double,
     zIndex: 1,
+  },
+  timeText: {
+    ...Fonts.body2,
+    color: Colors.typography.primary,
+    fontSize: 16,
+  },
+  statusIcons: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: Layout.spacing.xs,
+  },
+  wifiIcon: {
+    width: 16,
+    height: 12,
+    backgroundColor: Colors.typography.primary,
+    borderRadius: 2,
+  },
+  batteryIcon: {
+    width: 24,
+    height: 12,
+    backgroundColor: Colors.typography.primary,
+    borderRadius: 2,
   },
   content: {
     flex: 1,
-    padding: Layout.spacing.xl,
     justifyContent: 'center',
+    paddingHorizontal: Layout.spacing.double,
   },
   title: {
-    ...Fonts.heading,
-    fontSize: 32,
-    color: Colors.white,
+    ...Fonts.headline2,
+    color: Colors.typography.primary,
+    textAlign: 'center',
     marginBottom: Layout.spacing.sm,
   },
   subtitle: {
-    ...Fonts.body,
-    fontSize: 16,
-    color: Colors.gray[400],
-    marginBottom: Layout.spacing.xl,
+    ...Fonts.body1,
+    color: Colors.typography.secondary,
+    textAlign: 'center',
+    marginBottom: Layout.spacing.quadruple,
   },
   form: {
-    width: '100%',
+    gap: Layout.spacing.md,
   },
   input: {
-    ...Fonts.body,
-    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    backgroundColor: Colors.entryField,
     borderRadius: Layout.borderRadius.md,
-    padding: Layout.spacing.md,
-    color: Colors.white,
-    marginBottom: Layout.spacing.md,
+    paddingHorizontal: Layout.spacing.md,
+    paddingVertical: Layout.spacing.md,
+    color: Colors.typography.primary,
     fontSize: 16,
+    borderWidth: 1,
+    borderColor: Colors.border,
   },
   signupButton: {
-    backgroundColor: Colors.secondary[500],
+    backgroundColor: Colors.primary,
+    paddingVertical: Layout.spacing.md,
     borderRadius: Layout.borderRadius.md,
-    padding: Layout.spacing.md,
-    alignItems: 'center',
-    marginBottom: Layout.spacing.xl,
+    marginTop: Layout.spacing.md,
   },
   signupButtonText: {
     ...Fonts.button,
-    color: Colors.white,
+    color: Colors.typography.primary,
+    textAlign: 'center',
     fontSize: 16,
   },
-  divider: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: Layout.spacing.xl,
-  },
-  dividerLine: {
-    flex: 1,
-    height: 1,
-    backgroundColor: Colors.gray[700],
-  },
-  dividerText: {
-    ...Fonts.body,
-    color: Colors.gray[400],
-    marginHorizontal: Layout.spacing.md,
-  },
-  socialButton: {
-    backgroundColor: Colors.white,
-    borderRadius: Layout.borderRadius.md,
-    padding: Layout.spacing.md,
-    alignItems: 'center',
-    marginBottom: Layout.spacing.md,
-  },
-  socialButtonText: {
-    ...Fonts.button,
-    color: Colors.gray[800],
-    fontSize: 16,
-  },
-  footer: {
+  loginContainer: {
     flexDirection: 'row',
     justifyContent: 'center',
-    marginTop: Layout.spacing.xl,
+    marginTop: Layout.spacing.double,
   },
-  footerText: {
-    ...Fonts.body,
-    color: Colors.gray[400],
-    fontSize: 14,
+  loginText: {
+    ...Fonts.body3,
+    color: Colors.typography.primary,
+    fontSize: 13,
   },
-  footerLink: {
-    ...Fonts.button,
-    color: Colors.secondary[500],
-    fontSize: 14,
+  loginLink: {
+    ...Fonts.body4,
+    color: Colors.primary,
+    fontSize: 13,
   },
 });

@@ -26,17 +26,17 @@ export default function SearchBar({
   return (
     <View style={styles.container}>
       <View style={styles.searchContainer}>
-        <Search size={20} color={Colors.gray[500]} style={styles.searchIcon} />
+        <Search size={20} color={Colors.typography.secondary} style={styles.searchIcon} />
         <TextInput
           style={styles.input}
           placeholder={placeholder}
-          placeholderTextColor={Colors.gray[400]}
+          placeholderTextColor={Colors.typography.secondary}
           value={searchText}
           onChangeText={handleChangeText}
         />
       </View>
       <TouchableOpacity onPress={onFilterPress} style={styles.filterButton}>
-        <Sliders size={20} color={Colors.white} />
+        <Sliders size={20} color={Colors.typography.primary} />
       </TouchableOpacity>
     </View>
   );
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: Colors.gray[100],
+    backgroundColor: Colors.entryField,
     borderRadius: Layout.borderRadius.md,
     paddingHorizontal: Layout.spacing.md,
     height: 48,
@@ -65,11 +65,11 @@ const styles = StyleSheet.create({
     ...Fonts.body,
     flex: 1,
     fontSize: 16,
-    color: Colors.gray[800],
+    color: Colors.typography.secondary,
     height: '100%',
   },
   filterButton: {
-    backgroundColor: Colors.primary[600],
+    backgroundColor: Colors.primary,
     width: 48,
     height: 48,
     borderRadius: Layout.borderRadius.md,

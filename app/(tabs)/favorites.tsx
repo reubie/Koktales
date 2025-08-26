@@ -1,56 +1,46 @@
-import { useState } from 'react';
-import { View, Text, StyleSheet, FlatList } from 'react-native';
-import { StatusBar } from 'expo-status-bar';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Colors from '@/constants/Colors';
 import Layout from '@/constants/Layout';
 import Fonts from '@/constants/Fonts';
-import Header from '@/components/Header';
-import CocktailCard from '@/components/CocktailCard';
-import { cocktails } from '@/constants/Cocktails';
 import { Heart } from 'lucide-react-native';
 
 export default function FavoritesScreen() {
-  // Initial favorites based on the data
-  const [favoriteCocktails, setFavoriteCocktails] = useState(
-    cocktails.filter(cocktail => cocktail.favorite)
-  );
-
-  if (favoriteCocktails.length === 0) {
-    return (
-      <SafeAreaView style={styles.container}>
-        <StatusBar style="dark" />
-        <Header title="Favorites" showNotification={false} />
-        
-        <View style={styles.emptyContainer}>
-          <View style={styles.iconContainer}>
-            <Heart size={64} color={Colors.gray[300]} />
-          </View>
-          <Text style={styles.emptyTitle}>No favorites yet</Text>
-          <Text style={styles.emptyMessage}>
-            Start adding cocktails to your favorites to see them here
-          </Text>
-        </View>
-      </SafeAreaView>
-    );
-  }
+  // Mock favorites data
+  const favorites = [
+    { id: '1', name: 'Classic Margarita', category: 'Cocktails' },
+    { id: '2', name: 'Old Fashioned', category: 'Whiskey' },
+    { id: '3', name: 'Mojito', category: 'Rum' },
+  ];
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar style="dark" />
-      <Header title="Favorites" showNotification={false} />
+      <StatusBar barStyle="light-content" backgroundColor={Colors.background} />
       
-      <FlatList
-        data={favoriteCocktails}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.listContent}
-        renderItem={({ item }) => (
-          <CocktailCard
-            cocktail={item}
-            horizontal={true}
-          />
+      <View style={styles.header}>
+        <Text style={styles.title}>Favorites</Text>
+        <Text style={styles.subtitle}>Your saved cocktail recipes</Text>
+      </View>
+
+      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+        {favorites.length > 0 ? (
+          favorites.map((favorite) => (
+            <TouchableOpacity key={favorite.id} style={styles.favoriteItem}>
+              <View style={styles.favoriteInfo}>
+                <Text style={styles.favoriteName}>{favorite.name}</Text>
+                <Text style={styles.favoriteCategory}>{favorite.category}</Text>
+              </View>
+              <Heart size={20} color={Colors.primary} fill={Colors.primary} />
+            </TouchableOpacity>
+          ))
+        ) : (
+          <View style={styles.emptyState}>
+            <Heart size={48} color={Colors.typography.secondary} />
+            <Text style={styles.emptyTitle}>No favorites yet</Text>
+            <Text style={styles.emptySubtitle}>Start exploring and save your favorite cocktails</Text>
+          </View>
         )}
-      />
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -58,38 +48,64 @@ export default function FavoritesScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background.primary,
+    backgroundColor: Colors.background,
   },
-  listContent: {
-    padding: Layout.spacing.lg,
+  header: {
+    paddingHorizontal: Layout.spacing.double,
+    paddingVertical: Layout.spacing.double,
   },
-  emptyContainer: {
+  title: {
+    ...Fonts.headline2,
+    color: Colors.typography.primary,
+    marginBottom: Layout.spacing.sm,
+  },
+  subtitle: {
+    ...Fonts.body1,
+    color: Colors.typography.secondary,
+  },
+  content: {
+    flex: 1,
+    paddingHorizontal: Layout.spacing.double,
+  },
+  favoriteItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: Colors.surface,
+    padding: Layout.spacing.md,
+    borderRadius: Layout.borderRadius.md,
+    marginBottom: Layout.spacing.md,
+  },
+  favoriteInfo: {
+    flex: 1,
+  },
+  favoriteName: {
+    ...Fonts.body2,
+    color: Colors.typography.primary,
+    fontSize: 16,
+    marginBottom: Layout.spacing.xs,
+  },
+  favoriteCategory: {
+    ...Fonts.body3,
+    color: Colors.typography.secondary,
+    fontSize: 13,
+  },
+  emptyState: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    paddingHorizontal: Layout.spacing.xl,
-  },
-  iconContainer: {
-    width: 100,
-    height: 100,
-    borderRadius: 50,
-    backgroundColor: Colors.gray[100],
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: Layout.spacing.xl,
+    paddingVertical: Layout.spacing.quadruple,
   },
   emptyTitle: {
-    ...Fonts.heading,
-    fontSize: 24,
-    color: Colors.gray[800],
-    marginBottom: Layout.spacing.md,
-    textAlign: 'center',
+    ...Fonts.headline3,
+    color: Colors.typography.primary,
+    marginTop: Layout.spacing.md,
+    marginBottom: Layout.spacing.sm,
   },
-  emptyMessage: {
-    ...Fonts.body,
-    fontSize: 16,
-    color: Colors.gray[500],
+  emptySubtitle: {
+    ...Fonts.body1,
+    color: Colors.typography.secondary,
     textAlign: 'center',
-    lineHeight: 24,
+    paddingHorizontal: Layout.spacing.double,
   },
 });

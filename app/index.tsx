@@ -58,7 +58,7 @@ export default function SplashScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.primary[800],
+    backgroundColor: Colors.background,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -76,19 +76,19 @@ const styles = StyleSheet.create({
   },
   overlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(75, 29, 149, 0.7)',
+    backgroundColor: 'rgba(14, 14, 14, 0.7)',
   },
   logoText: {
-    ...Fonts.heading,
+    ...Fonts.headline,
     fontSize: 42,
-    color: Colors.white,
+    color: Colors.typography.primary,
     letterSpacing: 2,
     marginBottom: Layout.spacing.md,
   },
   tagline: {
-    ...Fonts.body,
+    ...Fonts.body1,
     fontSize: 18,
-    color: Colors.white,
+    color: Colors.typography.primary,
     opacity: 0.9,
   },
 });

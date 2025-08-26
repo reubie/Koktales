@@ -1,8 +1,8 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { router } from 'expo-router';
-import Colors from '../constants/Colors';
-import Layout from '../constants/Layout';
-import Fonts from '../constants/Fonts';
+import Colors from '@/constants/Colors';
+import Layout from '@/constants/Layout';
+import Fonts from '@/constants/Fonts';
 import { Bookmark } from 'lucide-react-native';
 
 const articles = [
@@ -46,7 +46,7 @@ export default function ArticleList() {
             <View style={styles.header}>
               <Text style={styles.category}>{article.category}</Text>
               <TouchableOpacity>
-                <Bookmark size={20} color={Colors.gray[400]} />
+                <Bookmark size={20} color={Colors.typography.secondary} />
               </TouchableOpacity>
             </View>
             <Text style={styles.title}>{article.title}</Text>
@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
     padding: Layout.spacing.lg,
   },
   articleCard: {
-    backgroundColor: Colors.gray[800],
+          backgroundColor: Colors.surface,
     borderRadius: Layout.borderRadius.lg,
     marginBottom: Layout.spacing.lg,
     overflow: 'hidden',
@@ -86,23 +86,23 @@ const styles = StyleSheet.create({
   },
   category: {
     ...Fonts.caption,
-    color: Colors.secondary[500],
+          color: Colors.primary,
     fontSize: 12,
   },
-  title: {
-    ...Fonts.heading,
-    fontSize: 18,
-    color: Colors.white,
-    marginBottom: Layout.spacing.sm,
-  },
+      title: {
+      ...Fonts.headline3,
+      fontSize: 18,
+      color: Colors.typography.primary,
+      marginBottom: Layout.spacing.sm,
+    },
   description: {
-    ...Fonts.body,
-    color: Colors.gray[400],
+    ...Fonts.body1,
+    color: Colors.typography.secondary,
     marginBottom: Layout.spacing.md,
   },
   readTime: {
     ...Fonts.caption,
-    color: Colors.gray[500],
+    color: Colors.typography.secondary,
     fontSize: 12,
   },
 }); 

@@ -1,30 +1,32 @@
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, StatusBar } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, StatusBar } from 'react-native';
+import { router } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Colors from '@/constants/Colors';
 import Layout from '@/constants/Layout';
 import Fonts from '@/constants/Fonts';
-import { User, Settings, Heart, BookOpen, LogOut } from 'lucide-react-native';
+import { ArrowLeft, User, Settings, Bell, LogOut } from 'lucide-react-native';
 
-export default function ProfileScreen() {
+export default function SettingsScreen() {
+  const handleBack = () => {
+    router.back();
+  };
+
   const handleLogout = () => {
     // Handle logout logic
-    console.log('Logout pressed');
+    router.push('/auth/login');
   };
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor={Colors.background} />
       
+      {/* Header */}
       <View style={styles.header}>
-        <View style={styles.profileInfo}>
-          <View style={styles.avatar}>
-            <User size={32} color={Colors.typography.primary} />
-          </View>
-          <View style={styles.profileText}>
-            <Text style={styles.name}>John Doe</Text>
-            <Text style={styles.email}>john.doe@example.com</Text>
-          </View>
-        </View>
+        <TouchableOpacity onPress={handleBack} style={styles.backButton}>
+          <ArrowLeft size={24} color={Colors.typography.primary} />
+        </TouchableOpacity>
+        <Text style={styles.headerTitle}>Settings</Text>
+        <View style={styles.placeholder} />
       </View>
 
       <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
@@ -40,27 +42,16 @@ export default function ProfileScreen() {
 
           <TouchableOpacity style={styles.menuItem}>
             <View style={styles.menuIcon}>
+              <Bell size={20} color={Colors.primary} />
+            </View>
+            <Text style={styles.menuText}>Notifications</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity style={styles.menuItem}>
+            <View style={styles.menuIcon}>
               <Settings size={20} color={Colors.primary} />
             </View>
-            <Text style={styles.menuText}>Settings</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Activity</Text>
-          
-          <TouchableOpacity style={styles.menuItem}>
-            <View style={styles.menuIcon}>
-              <Heart size={20} color={Colors.primary} />
-            </View>
-            <Text style={styles.menuText}>My Favorites</Text>
-          </TouchableOpacity>
-
-          <TouchableOpacity style={styles.menuItem}>
-            <View style={styles.menuIcon}>
-              <BookOpen size={20} color={Colors.primary} />
-            </View>
-            <Text style={styles.menuText}>My Recipes</Text>
+            <Text style={styles.menuText}>Preferences</Text>
           </TouchableOpacity>
         </View>
 
@@ -79,35 +70,22 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.background,
   },
   header: {
-    paddingHorizontal: Layout.spacing.double,
-    paddingVertical: Layout.spacing.double,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.border,
-  },
-  profileInfo: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
+    paddingTop: Layout.spacing.triple,
+    paddingHorizontal: Layout.spacing.double,
+    paddingBottom: Layout.spacing.md,
   },
-  avatar: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-    backgroundColor: Colors.surface,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginRight: Layout.spacing.md,
+  backButton: {
+    padding: Layout.spacing.sm,
   },
-  profileText: {
-    flex: 1,
-  },
-  name: {
+  headerTitle: {
     ...Fonts.headline3,
     color: Colors.typography.primary,
-    marginBottom: Layout.spacing.xs,
   },
-  email: {
-    ...Fonts.body1,
-    color: Colors.typography.secondary,
+  placeholder: {
+    width: 40,
   },
   content: {
     flex: 1,
@@ -159,4 +137,4 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginLeft: Layout.spacing.sm,
   },
-});
+}); 

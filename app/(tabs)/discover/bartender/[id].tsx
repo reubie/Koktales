@@ -1,173 +1,201 @@
-import { View, Text, StyleSheet, Image, ScrollView, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView, StatusBar } from 'react-native';
+import { useState } from 'react';
 import { useLocalSearchParams, router } from 'expo-router';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import Colors from '@/constants/Colors';
 import Layout from '@/constants/Layout';
 import Fonts from '@/constants/Fonts';
-import { ArrowLeft, MapPin, Send } from 'lucide-react-native';
+import { ArrowLeft, User, MapPin, Send, Heart } from 'lucide-react-native';
 
 export default function BartenderProfileScreen() {
   const { id } = useLocalSearchParams();
   const [isFollowing, setIsFollowing] = useState(false);
 
+  const handleBack = () => {
+    router.back();
+  };
+
   return (
-    <SafeAreaView style={styles.container}>
-      <ScrollView style={styles.content}>
-        <View style={styles.header}>
-          <TouchableOpacity 
-            style={styles.backButton}
-            onPress={() => router.back()}
-          >
-            <ArrowLeft size={24} color={Colors.white} />
-          </TouchableOpacity>
-          
-          <Image
-            source={{ uri: 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg' }}
-            style={styles.profileImage}
-          />
+    <View style={styles.container}>
+      <StatusBar barStyle="light-content" backgroundColor={Colors.background} />
+      
+      {/* Header */}
+      <View style={styles.header}>
+        <TouchableOpacity onPress={handleBack} style={styles.backButton}>
+          <ArrowLeft size={24} color={Colors.typography.primary} />
+        </TouchableOpacity>
+      </View>
+
+      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+        <View style={styles.profileSection}>
+          <View style={styles.avatar}>
+            <User size={40} color={Colors.primary} />
+          </View>
           
           <Text style={styles.name}>Adam White</Text>
-          <Text style={styles.bio}>Mixologist at White Wolf bar</Text>
-          <Text style={styles.location}>
-            <MapPin size={16} color={Colors.gray[400]} /> Florida, USA
-          </Text>
+          <Text style={styles.bio}>Mixologist at White Wolf Bar</Text>
+          
+          <View style={styles.locationContainer}>
+            <MapPin size={16} color={Colors.typography.secondary} />
+            <Text style={styles.location}>Florida, USA</Text>
+          </View>
 
           <View style={styles.statsContainer}>
             <View style={styles.statItem}>
               <Text style={styles.statValue}>14</Text>
-              <Text style={styles.statLabel}>recipes</Text>
+              <Text style={styles.statLabel}>Recipes</Text>
             </View>
             <View style={styles.statItem}>
               <Text style={styles.statValue}>144</Text>
-              <Text style={styles.statLabel}>followers</Text>
+              <Text style={styles.statLabel}>Followers</Text>
             </View>
             <View style={styles.statItem}>
               <Text style={styles.statValue}>9</Text>
-              <Text style={styles.statLabel}>following</Text>
+              <Text style={styles.statLabel}>Following</Text>
             </View>
           </View>
 
           <View style={styles.buttonContainer}>
             <TouchableOpacity 
-              style={[styles.button, isFollowing && styles.followingButton]}
+              style={[styles.followButton, isFollowing && styles.followingButton]}
               onPress={() => setIsFollowing(!isFollowing)}
             >
-              <Text style={[styles.buttonText, isFollowing && styles.followingButtonText]}>
+              <Heart size={16} color={isFollowing ? Colors.typography.primary : Colors.primary} />
+              <Text style={[styles.followButtonText, isFollowing && styles.followingButtonText]}>
                 {isFollowing ? 'Following' : 'Follow'}
               </Text>
             </TouchableOpacity>
             
             <TouchableOpacity style={styles.messageButton}>
-              <Send size={20} color={Colors.white} />
+              <Send size={20} color={Colors.typography.primary} />
             </TouchableOpacity>
           </View>
         </View>
 
-        <View style={styles.tabsContainer}>
-          {/* Add tabs for Recipes, About, etc. */}
+        <View style={styles.contentSection}>
+          <Text style={styles.sectionTitle}>About</Text>
+          <Text style={styles.aboutText}>
+            Passionate mixologist with 5 years of experience crafting unique cocktails. 
+            Specializes in classic recipes with modern twists.
+          </Text>
         </View>
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background.dark,
+    backgroundColor: Colors.background,
+  },
+  header: {
+    paddingTop: Layout.spacing.triple,
+    paddingHorizontal: Layout.spacing.double,
+    paddingBottom: Layout.spacing.md,
+  },
+  backButton: {
+    padding: Layout.spacing.sm,
   },
   content: {
     flex: 1,
+    paddingHorizontal: Layout.spacing.double,
   },
-  header: {
+  profileSection: {
     alignItems: 'center',
-    padding: Layout.spacing.xl,
+    marginBottom: Layout.spacing.quadruple,
   },
-  backButton: {
-    position: 'absolute',
-    top: Layout.spacing.lg,
-    left: Layout.spacing.lg,
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+  avatar: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: Colors.surface,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  profileImage: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    marginBottom: Layout.spacing.lg,
+    marginBottom: Layout.spacing.md,
   },
   name: {
-    ...Fonts.heading,
-    fontSize: 24,
-    color: Colors.white,
+    ...Fonts.headline2,
+    color: Colors.typography.primary,
     marginBottom: Layout.spacing.xs,
   },
   bio: {
-    ...Fonts.body,
-    fontSize: 16,
-    color: Colors.gray[400],
-    marginBottom: Layout.spacing.xs,
+    ...Fonts.body2,
+    color: Colors.typography.secondary,
+    marginBottom: Layout.spacing.md,
+  },
+  locationContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: Layout.spacing.double,
   },
   location: {
-    ...Fonts.body,
-    fontSize: 14,
-    color: Colors.gray[400],
-    marginBottom: Layout.spacing.xl,
+    ...Fonts.body3,
+    color: Colors.typography.secondary,
+    marginLeft: Layout.spacing.xs,
   },
   statsContainer: {
     flexDirection: 'row',
     justifyContent: 'space-around',
     width: '100%',
-    marginBottom: Layout.spacing.xl,
+    marginBottom: Layout.spacing.double,
   },
   statItem: {
     alignItems: 'center',
   },
   statValue: {
-    ...Fonts.heading,
-    fontSize: 20,
-    color: Colors.white,
+    ...Fonts.headline3,
+    color: Colors.primary,
+    marginBottom: Layout.spacing.xs,
   },
   statLabel: {
-    ...Fonts.caption,
-    fontSize: 14,
-    color: Colors.gray[400],
+    ...Fonts.body3,
+    color: Colors.typography.secondary,
+    fontSize: 12,
   },
   buttonContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: Layout.spacing.md,
   },
-  button: {
-    backgroundColor: Colors.secondary[500],
-    paddingVertical: Layout.spacing.sm,
-    paddingHorizontal: Layout.spacing.xl,
+  followButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Colors.primary,
+    paddingHorizontal: Layout.spacing.double,
+    paddingVertical: Layout.spacing.md,
     borderRadius: Layout.borderRadius.full,
-    marginRight: Layout.spacing.md,
+    gap: Layout.spacing.xs,
   },
   followingButton: {
-    backgroundColor: Colors.gray[800],
+    backgroundColor: Colors.surface,
   },
-  buttonText: {
-    ...Fonts.button,
-    color: Colors.white,
-    fontSize: 16,
+  followButtonText: {
+    ...Fonts.body2,
+    color: Colors.typography.primary,
+    fontSize: 14,
   },
   followingButtonText: {
-    color: Colors.gray[400],
+    color: Colors.typography.primary,
   },
   messageButton: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    backgroundColor: Colors.gray[800],
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: Colors.surface,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  tabsContainer: {
-    flex: 1,
+  contentSection: {
+    marginBottom: Layout.spacing.quadruple,
+  },
+  sectionTitle: {
+    ...Fonts.headline3,
+    color: Colors.typography.primary,
+    marginBottom: Layout.spacing.md,
+  },
+  aboutText: {
+    ...Fonts.body1,
+    color: Colors.typography.primary,
+    lineHeight: 24,
   },
 });

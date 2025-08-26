@@ -1,93 +1,62 @@
-import { useState } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, StatusBar } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Lock, ChevronRight, Play } from 'lucide-react-native';
-import { router } from 'expo-router';
 import Colors from '@/constants/Colors';
 import Layout from '@/constants/Layout';
 import Fonts from '@/constants/Fonts';
-import { cocktails, Cocktail } from '@/constants/Cocktails';
-import Header from '@/components/Header';
+import { ShoppingCart, Plus, Check } from 'lucide-react-native';
+import { useState } from 'react';
 
 export default function ShoppingListScreen() {
-  const [selectedCocktail, setSelectedCocktail] = useState<Cocktail | null>(null);
+  const [items, setItems] = useState([
+    { id: '1', name: 'Tequila Blanco', category: 'Spirits', completed: false },
+    { id: '2', name: 'Fresh Limes', category: 'Produce', completed: true },
+    { id: '3', name: 'Triple Sec', category: 'Liqueurs', completed: false },
+    { id: '4', name: 'Coarse Salt', category: 'Pantry', completed: false },
+  ]);
 
-  const freeCocktails = cocktails.filter(cocktail => cocktail.type === 'free');
-  const premiumCocktails = cocktails.filter(cocktail => cocktail.type === 'premium');
-
-  const handleStartMaking = (cocktail: Cocktail) => {
-    router.push(`/cocktail/${cocktail.id}`);
+  const toggleItem = (id: string) => {
+    setItems(items.map(item => 
+      item.id === id ? { ...item, completed: !item.completed } : item
+    ));
   };
 
-  const renderCocktailCard = (cocktail: Cocktail) => (
-    <View key={cocktail.id} style={styles.cocktailCard}>
-      <TouchableOpacity
-        style={styles.cocktailHeader}
-        onPress={() => setSelectedCocktail(selectedCocktail?.id === cocktail.id ? null : cocktail)}
-      >
-        <Image source={{ uri: cocktail.image }} style={styles.cocktailImage} />
-        <View style={styles.cocktailInfo}>
-          <View style={styles.cocktailHeaderRow}>
-            <Text style={styles.cocktailName}>{cocktail.name}</Text>
-            {cocktail.type === 'premium' && (
-              <View style={styles.premiumBadge}>
-                <Lock size={12} color={Colors.white} />
-                <Text style={styles.premiumText}>${cocktail.price}</Text>
-              </View>
-            )}
-          </View>
-          <Text style={styles.cocktailDescription}>{cocktail.description}</Text>
-          <View style={styles.cocktailMeta}>
-            <Text style={styles.cocktailMetaText}>{cocktail.preparationTime}</Text>
-            <Text style={[styles.cocktailMetaText, styles.dot]}>•</Text>
-            <Text style={styles.cocktailMetaText}>{cocktail.difficulty}</Text>
-            <ChevronRight 
-              size={16} 
-              color={Colors.gray[400]}
-              style={[
-                styles.chevron,
-                selectedCocktail?.id === cocktail.id && styles.chevronRotated
-              ]}
-            />
-          </View>
-        </View>
-      </TouchableOpacity>
-
-      {selectedCocktail?.id === cocktail.id && (
-        <View style={styles.expandedContent}>
-          <View style={styles.ingredientsList}>
-            <Text style={styles.ingredientsTitle}>Ingredients:</Text>
-            {cocktail.ingredients.map(ingredient => (
-              <View key={ingredient.id} style={styles.ingredientItem}>
-                <Text style={styles.ingredientName}>{ingredient.name}</Text>
-                <Text style={styles.ingredientAmount}>
-                  {ingredient.amount} {ingredient.unit}
-                </Text>
-              </View>
-            ))}
-          </View>
-          
-          <TouchableOpacity 
-            style={styles.startButton}
-            onPress={() => handleStartMaking(cocktail)}
-          >
-            <Play size={18} color={Colors.white} />
-            <Text style={styles.startButtonText}>Start Making Cocktail</Text>
-          </TouchableOpacity>
-        </View>
-      )}
-    </View>
-  );
+  const completedCount = items.filter(item => item.completed).length;
+  const totalCount = items.length;
 
   return (
     <SafeAreaView style={styles.container}>
-      <Header title="Shopping List" />
-      <ScrollView style={styles.content}>
-        <Text style={styles.sectionTitle}>Free Cocktails</Text>
-        {freeCocktails.map(renderCocktailCard)}
+      <StatusBar barStyle="light-content" backgroundColor={Colors.background} />
+      
+      <View style={styles.header}>
+        <Text style={styles.title}>Shopping List</Text>
+        <Text style={styles.subtitle}>{completedCount} of {totalCount} items completed</Text>
+      </View>
 
-        <Text style={styles.sectionTitle}>Premium Cocktails</Text>
-        {premiumCocktails.map(renderCocktailCard)}
+      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
+        {items.map((item) => (
+          <TouchableOpacity 
+            key={item.id} 
+            style={[styles.item, item.completed && styles.completedItem]}
+            onPress={() => toggleItem(item.id)}
+          >
+            <View style={styles.itemInfo}>
+              <Text style={[styles.itemName, item.completed && styles.completedText]}>
+                {item.name}
+              </Text>
+              <Text style={[styles.itemCategory, item.completed && styles.completedText]}>
+                {item.category}
+              </Text>
+            </View>
+            <View style={[styles.checkbox, item.completed && styles.checkedBox]}>
+              {item.completed && <Check size={16} color={Colors.typography.primary} />}
+            </View>
+          </TouchableOpacity>
+        ))}
+
+        <TouchableOpacity style={styles.addButton}>
+          <Plus size={20} color={Colors.typography.primary} />
+          <Text style={styles.addButtonText}>Add Item</Text>
+        </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>
   );
@@ -96,134 +65,79 @@ export default function ShoppingListScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background.primary,
+    backgroundColor: Colors.background,
+  },
+  header: {
+    paddingHorizontal: Layout.spacing.double,
+    paddingVertical: Layout.spacing.double,
+  },
+  title: {
+    ...Fonts.headline2,
+    color: Colors.typography.primary,
+    marginBottom: Layout.spacing.sm,
+  },
+  subtitle: {
+    ...Fonts.body1,
+    color: Colors.typography.secondary,
   },
   content: {
     flex: 1,
-    padding: Layout.spacing.lg,
+    paddingHorizontal: Layout.spacing.double,
   },
-  sectionTitle: {
-    ...Fonts.heading,
-    fontSize: 24,
-    color: Colors.gray[800],
-    marginBottom: Layout.spacing.lg,
-  },
-  cocktailCard: {
-    backgroundColor: Colors.white,
-    borderRadius: Layout.borderRadius.lg,
-    marginBottom: Layout.spacing.lg,
-    overflow: 'hidden',
-    elevation: 2,
-    shadowColor: Colors.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-  },
-  cocktailHeader: {
+  item: {
     flexDirection: 'row',
-  },
-  cocktailImage: {
-    width: 120,
-    height: 120,
-    resizeMode: 'cover',
-  },
-  cocktailInfo: {
-    flex: 1,
-    padding: Layout.spacing.lg,
-  },
-  cocktailHeaderRow: {
-    flexDirection: 'row',
+    alignItems: 'center',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: Layout.spacing.sm,
-  },
-  cocktailName: {
-    ...Fonts.heading,
-    fontSize: 18,
-    color: Colors.gray[800],
-    flex: 1,
-  },
-  premiumBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: Colors.primary[600],
-    paddingHorizontal: Layout.spacing.sm,
-    paddingVertical: Layout.spacing.xs,
-    borderRadius: Layout.borderRadius.full,
-  },
-  premiumText: {
-    ...Fonts.caption,
-    color: Colors.white,
-    marginLeft: 4,
-    fontSize: 12,
-  },
-  cocktailDescription: {
-    ...Fonts.body,
-    color: Colors.gray[600],
+    backgroundColor: Colors.surface,
+    padding: Layout.spacing.md,
+    borderRadius: Layout.borderRadius.md,
     marginBottom: Layout.spacing.md,
-    fontSize: 14,
   },
-  cocktailMeta: {
-    flexDirection: 'row',
-    alignItems: 'center',
+  completedItem: {
+    opacity: 0.6,
   },
-  cocktailMetaText: {
-    ...Fonts.caption,
-    color: Colors.gray[500],
-    fontSize: 14,
-    textTransform: 'capitalize',
+  itemInfo: {
+    flex: 1,
   },
-  dot: {
-    marginHorizontal: Layout.spacing.xs,
-  },
-  chevron: {
-    marginLeft: 'auto',
-    transform: [{ rotate: '0deg' }],
-  },
-  chevronRotated: {
-    transform: [{ rotate: '90deg' }],
-  },
-  expandedContent: {
-    padding: Layout.spacing.lg,
-    paddingTop: 0,
-    borderTopWidth: 1,
-    borderTopColor: Colors.gray[200],
-  },
-  ingredientsList: {
-    marginBottom: Layout.spacing.lg,
-  },
-  ingredientsTitle: {
-    ...Fonts.subheading,
+  itemName: {
+    ...Fonts.body2,
+    color: Colors.typography.primary,
     fontSize: 16,
-    color: Colors.gray[800],
-    marginBottom: Layout.spacing.sm,
+    marginBottom: Layout.spacing.xs,
   },
-  ingredientItem: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
+  itemCategory: {
+    ...Fonts.body3,
+    color: Colors.typography.secondary,
+    fontSize: 13,
+  },
+  completedText: {
+    textDecorationLine: 'line-through',
+  },
+  checkbox: {
+    width: 24,
+    height: 24,
+    borderRadius: 12,
+    borderWidth: 2,
+    borderColor: Colors.primary,
+    justifyContent: 'center',
     alignItems: 'center',
-    paddingVertical: Layout.spacing.xs,
   },
-  ingredientName: {
-    ...Fonts.body,
-    color: Colors.gray[700],
+  checkedBox: {
+    backgroundColor: Colors.primary,
   },
-  ingredientAmount: {
-    ...Fonts.body,
-    color: Colors.gray[500],
-  },
-  startButton: {
-    backgroundColor: Colors.primary[600],
+  addButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: Layout.spacing.md,
-    paddingHorizontal: Layout.spacing.lg,
-    borderRadius: Layout.borderRadius.lg,
+    backgroundColor: Colors.surface,
+    padding: Layout.spacing.md,
+    borderRadius: Layout.borderRadius.md,
+    marginTop: Layout.spacing.md,
+    marginBottom: Layout.spacing.double,
   },
-  startButtonText: {
-    ...Fonts.subheading,
-    color: Colors.white,
+  addButtonText: {
+    ...Fonts.body2,
+    color: Colors.typography.primary,
     fontSize: 16,
     marginLeft: Layout.spacing.sm,
   },

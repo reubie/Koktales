@@ -5,16 +5,10 @@ import { StatusBar } from 'expo-status-bar';
 import { useFrameworkReady } from '@/hooks/useFrameworkReady';
 import { useFonts } from 'expo-font';
 import {
-  Montserrat_400Regular,
-  Montserrat_500Medium,
-  Montserrat_600SemiBold,
-  Montserrat_700Bold
-} from '@expo-google-fonts/montserrat';
-import {
-  Manrope_400Regular,
-  Manrope_500Medium,
-  Manrope_600SemiBold
-} from '@expo-google-fonts/manrope';
+  Roboto_400Regular,
+  Roboto_500Medium,
+  Roboto_700Bold
+} from '@expo-google-fonts/roboto';
 import { SplashScreen } from 'expo-router';
 import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
@@ -28,13 +22,9 @@ export default function RootLayout() {
   useFrameworkReady();
   
   const [fontsLoaded, fontError] = useFonts({
-    'Montserrat-Regular': Montserrat_400Regular,
-    'Montserrat-Medium': Montserrat_500Medium,
-    'Montserrat-SemiBold': Montserrat_600SemiBold,
-    'Montserrat-Bold': Montserrat_700Bold,
-    'Manrope-Regular': Manrope_400Regular,
-    'Manrope-Medium': Manrope_500Medium,
-    'Manrope-SemiBold': Manrope_600SemiBold,
+    'Roboto': Roboto_400Regular,
+    'Roboto-Medium': Roboto_500Medium,
+    'Roboto-Bold': Roboto_700Bold,
     ...FontAwesome.font,
   });
 
@@ -110,7 +100,7 @@ function RootLayoutNav() {
             }} 
           />
           <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-          <Stack.Screen name="payment" options={{ title: 'Payment' }} />
+          <Stack.Screen name="payment/index" options={{ title: 'Payment' }} />
           <Stack.Screen 
             name="cocktail/[id]" 
             options={{ 
@@ -119,6 +109,13 @@ function RootLayoutNav() {
             }} 
           />
           <Stack.Screen name="+not-found" />
+          <Stack.Screen name="categories/index" />
+          <Stack.Screen name="categories/[id]" />
+          <Stack.Screen name="classics" />
+          <Stack.Screen name="popular" />
+          <Stack.Screen name="search" />
+          <Stack.Screen name="articles/[id]" />
+          <Stack.Screen name="search/filters" />
         </Stack>
       </ThemeProvider>
     </SubscriptionProvider>

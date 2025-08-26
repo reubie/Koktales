@@ -24,7 +24,7 @@ export default function SectionHeader({
           onPress={onViewAllPress}
         >
           <Text style={styles.viewAllText}>View All</Text>
-          <ChevronRight size={16} color={Colors.primary[600]} />
+          <ChevronRight size={16} color={Colors.primary} />
         </TouchableOpacity>
       )}
     </View>
@@ -41,18 +41,18 @@ const styles = StyleSheet.create({
     marginTop: Layout.spacing.lg,
   },
   title: {
-    ...Fonts.heading,
+    ...Fonts.headline3,
     fontSize: 20,
-    color: Colors.gray[800],
+    color: Colors.typography.primary,
   },
   viewAllButton: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   viewAllText: {
-    ...Fonts.button,
+    ...Fonts.body2,
     fontSize: 14,
-    color: Colors.primary[600],
+    color: Colors.primary,
     marginRight: 4,
   },
 });

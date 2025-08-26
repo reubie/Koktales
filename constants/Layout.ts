@@ -14,6 +14,11 @@ export const Layout = {
     lg: 24,
     xl: 32,
     xxl: 48,
+    // Design system spacing (8px and 16px based)
+    base: 8,
+    double: 16,
+    triple: 24,
+    quadruple: 32,
   },
   borderRadius: {
     xs: 4,

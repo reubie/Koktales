@@ -1,10 +1,10 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
-import Colors from '../../constants/Colors';
-import Layout from '../../constants/Layout';
-import Fonts from '../../constants/Fonts';
-import SearchBar from '../../components/SearchBar';
+import Colors from '@/constants/Colors';
+import Layout from '@/constants/Layout';
+import Fonts from '@/constants/Fonts';
+import SearchBar from '@/components/SearchBar';
 import { ArrowLeft, SlidersHorizontal } from 'lucide-react-native';
 
 export default function SearchScreen() {
@@ -40,7 +40,7 @@ export default function SearchScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background.dark,
+    backgroundColor: Colors.background,
   },
   header: {
     flexDirection: 'row',
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     padding: Layout.spacing.sm,
   },
   title: {
-    ...Fonts.heading,
+    ...Fonts.headline3,
     fontSize: 24,
     color: Colors.white,
   },

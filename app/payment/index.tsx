@@ -1,401 +1,217 @@
-import { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image, Alert } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { router, useLocalSearchParams } from 'expo-router';
+import { View, Text, StyleSheet, TouchableOpacity, TextInput, StatusBar } from 'react-native';
+import { useState } from 'react';
+import { router } from 'expo-router';
 import Colors from '@/constants/Colors';
 import Layout from '@/constants/Layout';
 import Fonts from '@/constants/Fonts';
-import Header from '@/components/Header';
-import { CreditCard, Smartphone, Shield, Check } from 'lucide-react-native';
-import { cocktails } from '@/constants/Cocktails';
-import { initializeStripe, processStripePayment, processMpesaPayment } from '@/services/PaymentService';
-import MpesaPhoneInput from '@/components/MpesaPhoneInput';
-
-type PaymentMethod = 'stripe' | 'mpesa';
-
-const subscriptionPlans = [
-  {
-    id: 'monthly',
-    name: 'Monthly Plan',
-    price: 9.99,
-    description: 'Access to all premium cocktails',
-    features: [
-      'Unlimited premium cocktails',
-      'New cocktails every week',
-      'Save favorite cocktails',
-      'Detailed instructions and tips'
-    ]
-  },
-  {
-    id: 'yearly',
-    name: 'Yearly Plan',
-    price: 99.99,
-    description: 'Save 17% with annual billing',
-    features: [
-      'All monthly plan features',
-      'Priority customer support',
-      'Early access to new features',
-      'Exclusive seasonal recipes'
-    ]
-  }
-];
+import { ArrowLeft, CreditCard, Lock } from 'lucide-react-native';
 
 export default function PaymentScreen() {
-  const params = useLocalSearchParams();
-  const [selectedPlan, setSelectedPlan] = useState(subscriptionPlans[0]);
-  const [selectedPaymentMethod, setSelectedPaymentMethod] = useState<PaymentMethod>('stripe');
-  const [showMpesaModal, setShowMpesaModal] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
-  
-  // If cocktailId is provided, it means we're buying a single cocktail
-  const cocktail = params.cocktailId ? 
-    cocktails.find(c => c.id === params.cocktailId) : null;
+  const [cardNumber, setCardNumber] = useState('');
+  const [expiryDate, setExpiryDate] = useState('');
+  const [cvv, setCvv] = useState('');
+  const [cardholderName, setCardholderName] = useState('');
 
-  useEffect(() => {
-    initializeStripe().catch(console.error);
-  }, []);
-
-  const handlePayment = async () => {
-    if (isProcessing) return;
-
-    const price = cocktail?.price ?? selectedPlan.price;
-    if (typeof price !== 'number') {
-      Alert.alert('Error', 'Invalid price');
-      return;
-    }
-
-    const item = {
-      id: cocktail ? cocktail.id : selectedPlan.id,
-      name: cocktail ? cocktail.name : selectedPlan.name,
-      price,
-    };
-
-    if (selectedPaymentMethod === 'stripe') {
-      await handleStripePayment(item);
-    } else if (selectedPaymentMethod === 'mpesa') {
-      setShowMpesaModal(true);
-    }
+  const handlePayment = () => {
+    // Handle payment logic
+    router.push('/(tabs)');
   };
 
-  const handleStripePayment = async (item: { id: string; name: string; price: number }) => {
-    setIsProcessing(true);
-    try {
-      const result = await processStripePayment(item);
-      if (result.success) {
-        Alert.alert('Success', result.message, [
-          { text: 'OK', onPress: () => router.back() }
-        ]);
-      } else {
-        Alert.alert('Error', result.message);
-      }
-    } catch (error) {
-      Alert.alert('Error', 'Payment failed. Please try again.');
-    } finally {
-      setIsProcessing(false);
-    }
-  };
-
-  const handleMpesaPayment = async (phoneNumber: string) => {
-    setShowMpesaModal(false);
-    setIsProcessing(true);
-
-    const price = cocktail?.price ?? selectedPlan.price;
-    if (typeof price !== 'number') {
-      Alert.alert('Error', 'Invalid price');
-      setIsProcessing(false);
-      return;
-    }
-
-    const item = {
-      id: cocktail ? cocktail.id : selectedPlan.id,
-      name: cocktail ? cocktail.name : selectedPlan.name,
-      price,
-    };
-
-    try {
-      const result = await processMpesaPayment(item, phoneNumber);
-      if (result.success) {
-        Alert.alert('Success', result.message, [
-          { text: 'OK', onPress: () => router.back() }
-        ]);
-      } else {
-        Alert.alert('Error', result.message);
-      }
-    } catch (error) {
-      Alert.alert('Error', 'Payment failed. Please try again.');
-    } finally {
-      setIsProcessing(false);
-    }
+  const handleBack = () => {
+    router.back();
   };
 
   return (
-    <SafeAreaView style={styles.container}>
-      <Header 
-        title={cocktail ? 'Buy Cocktail' : 'Choose Plan'} 
-        showNotification={false}
-      />
+    <View style={styles.container}>
+      <StatusBar barStyle="light-content" backgroundColor={Colors.background} />
       
-      <ScrollView style={styles.content}>
-        {cocktail ? (
-          // Single cocktail purchase
-          <View style={styles.cocktailCard}>
-            <Image source={{ uri: cocktail.image }} style={styles.cocktailImage} />
-            <View style={styles.cocktailInfo}>
-              <Text style={styles.cocktailName}>{cocktail.name}</Text>
-              <Text style={styles.cocktailPrice}>${cocktail.price}</Text>
-            </View>
-          </View>
-        ) : (
-          // Subscription plans
-          <View style={styles.plansContainer}>
-            {subscriptionPlans.map((plan) => (
-              <TouchableOpacity
-                key={plan.id}
-                style={[
-                  styles.planCard,
-                  selectedPlan.id === plan.id && styles.selectedPlan
-                ]}
-                onPress={() => setSelectedPlan(plan)}
-              >
-                <View style={styles.planHeader}>
-                  <Text style={styles.planName}>{plan.name}</Text>
-                  <Text style={styles.planPrice}>
-                    ${plan.price}
-                    <Text style={styles.planPeriod}>
-                      {plan.id === 'monthly' ? '/month' : '/year'}
-                    </Text>
-                  </Text>
-                </View>
-                <Text style={styles.planDescription}>{plan.description}</Text>
-                <View style={styles.featuresContainer}>
-                  {plan.features.map((feature, index) => (
-                    <View key={index} style={styles.featureItem}>
-                      <Check size={16} color={Colors.secondary[500]} />
-                      <Text style={styles.featureText}>{feature}</Text>
-                    </View>
-                  ))}
-                </View>
-              </TouchableOpacity>
-            ))}
-          </View>
-        )}
-
-        <View style={styles.paymentMethodsContainer}>
-          <Text style={styles.sectionTitle}>Payment Method</Text>
-          
-          <TouchableOpacity
-            style={[
-              styles.paymentMethod,
-              selectedPaymentMethod === 'stripe' && styles.selectedPaymentMethod
-            ]}
-            onPress={() => setSelectedPaymentMethod('stripe')}
-          >
-            <CreditCard size={24} color={Colors.gray[700]} />
-            <View style={styles.paymentMethodInfo}>
-              <Text style={styles.paymentMethodTitle}>Credit Card</Text>
-              <Text style={styles.paymentMethodDescription}>Pay with Visa, Mastercard, or AMEX</Text>
-            </View>
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={[
-              styles.paymentMethod,
-              selectedPaymentMethod === 'mpesa' && styles.selectedPaymentMethod
-            ]}
-            onPress={() => setSelectedPaymentMethod('mpesa')}
-          >
-            <Smartphone size={24} color={Colors.gray[700]} />
-            <View style={styles.paymentMethodInfo}>
-              <Text style={styles.paymentMethodTitle}>M-Pesa</Text>
-              <Text style={styles.paymentMethodDescription}>Pay using M-Pesa mobile money</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.securePaymentNote}>
-          <Shield size={16} color={Colors.gray[500]} />
-          <Text style={styles.securePaymentText}>
-            Your payment information is secure and encrypted
-          </Text>
-        </View>
-      </ScrollView>
-
-      <View style={styles.footer}>
-        <TouchableOpacity 
-          style={[styles.payButton, isProcessing && styles.payButtonDisabled]}
-          onPress={handlePayment}
-          disabled={isProcessing}
-        >
-          <Text style={styles.payButtonText}>
-            {isProcessing ? 'Processing...' : `Pay $${cocktail ? cocktail.price : selectedPlan.price}`}
-          </Text>
+      {/* Header */}
+      <View style={styles.header}>
+        <TouchableOpacity onPress={handleBack} style={styles.backButton}>
+          <ArrowLeft size={24} color={Colors.typography.primary} />
         </TouchableOpacity>
+        <Text style={styles.headerTitle}>Payment</Text>
+        <View style={styles.placeholder} />
       </View>
 
-      <MpesaPhoneInput
-        visible={showMpesaModal}
-        onClose={() => setShowMpesaModal(false)}
-        onSubmit={handleMpesaPayment}
-      />
-    </SafeAreaView>
+      <View style={styles.content}>
+        <View style={styles.securityNote}>
+          <Lock size={16} color={Colors.primary} />
+          <Text style={styles.securityText}>Your payment information is secure</Text>
+        </View>
+
+        <View style={styles.form}>
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>Card Number</Text>
+            <View style={styles.cardInputContainer}>
+              <CreditCard size={20} color={Colors.typography.secondary} />
+              <TextInput
+                style={styles.cardInput}
+                placeholder="1234 5678 9012 3456"
+                placeholderTextColor={Colors.typography.secondary}
+                value={cardNumber}
+                onChangeText={setCardNumber}
+                keyboardType="numeric"
+                maxLength={19}
+              />
+            </View>
+          </View>
+
+          <View style={styles.row}>
+            <View style={[styles.inputGroup, styles.halfWidth]}>
+              <Text style={styles.label}>Expiry Date</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="MM/YY"
+                placeholderTextColor={Colors.typography.secondary}
+                value={expiryDate}
+                onChangeText={setExpiryDate}
+                maxLength={5}
+              />
+            </View>
+            <View style={[styles.inputGroup, styles.halfWidth]}>
+              <Text style={styles.label}>CVV</Text>
+              <TextInput
+                style={styles.input}
+                placeholder="123"
+                placeholderTextColor={Colors.typography.secondary}
+                value={cvv}
+                onChangeText={setCvv}
+                keyboardType="numeric"
+                maxLength={4}
+                secureTextEntry
+              />
+            </View>
+          </View>
+
+          <View style={styles.inputGroup}>
+            <Text style={styles.label}>Cardholder Name</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="John Doe"
+              placeholderTextColor={Colors.typography.secondary}
+              value={cardholderName}
+              onChangeText={setCardholderName}
+              autoCapitalize="words"
+            />
+          </View>
+
+          <TouchableOpacity style={styles.payButton} onPress={handlePayment}>
+            <Text style={styles.payButtonText}>Pay $9.99</Text>
+          </TouchableOpacity>
+
+          <Text style={styles.termsText}>
+            By completing this payment, you agree to our Terms of Service and Privacy Policy
+          </Text>
+        </View>
+      </View>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.background.primary,
+    backgroundColor: Colors.background,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingTop: Layout.spacing.triple,
+    paddingHorizontal: Layout.spacing.double,
+    paddingBottom: Layout.spacing.md,
+  },
+  backButton: {
+    padding: Layout.spacing.sm,
+  },
+  headerTitle: {
+    ...Fonts.headline3,
+    color: Colors.typography.primary,
+  },
+  placeholder: {
+    width: 40,
   },
   content: {
     flex: 1,
-    padding: Layout.spacing.lg,
+    paddingHorizontal: Layout.spacing.double,
   },
-  cocktailCard: {
-    backgroundColor: Colors.white,
-    borderRadius: Layout.borderRadius.lg,
-    overflow: 'hidden',
-    marginBottom: Layout.spacing.xl,
-    elevation: 2,
-    shadowColor: Colors.black,
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-  },
-  cocktailImage: {
-    width: '100%',
-    height: 200,
-    resizeMode: 'cover',
-  },
-  cocktailInfo: {
-    padding: Layout.spacing.lg,
-  },
-  cocktailName: {
-    ...Fonts.heading,
-    fontSize: 24,
-    color: Colors.gray[800],
-    marginBottom: Layout.spacing.xs,
-  },
-  cocktailPrice: {
-    ...Fonts.heading,
-    fontSize: 32,
-    color: Colors.primary[600],
-  },
-  plansContainer: {
-    marginBottom: Layout.spacing.xl,
-  },
-  planCard: {
-    backgroundColor: Colors.white,
-    borderRadius: Layout.borderRadius.lg,
-    padding: Layout.spacing.lg,
-    marginBottom: Layout.spacing.lg,
-    borderWidth: 2,
-    borderColor: Colors.gray[200],
-  },
-  selectedPlan: {
-    borderColor: Colors.primary[600],
-  },
-  planHeader: {
-    marginBottom: Layout.spacing.md,
-  },
-  planName: {
-    ...Fonts.heading,
-    fontSize: 20,
-    color: Colors.gray[800],
-    marginBottom: Layout.spacing.xs,
-  },
-  planPrice: {
-    ...Fonts.heading,
-    fontSize: 32,
-    color: Colors.primary[600],
-  },
-  planPeriod: {
-    ...Fonts.body,
-    fontSize: 16,
-    color: Colors.gray[500],
-  },
-  planDescription: {
-    ...Fonts.body,
-    color: Colors.gray[600],
-    marginBottom: Layout.spacing.md,
-  },
-  featuresContainer: {
-    marginTop: Layout.spacing.md,
-  },
-  featureItem: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: Layout.spacing.sm,
-  },
-  featureText: {
-    ...Fonts.body,
-    color: Colors.gray[700],
-    marginLeft: Layout.spacing.sm,
-  },
-  paymentMethodsContainer: {
-    marginBottom: Layout.spacing.xl,
-  },
-  sectionTitle: {
-    ...Fonts.heading,
-    fontSize: 20,
-    color: Colors.gray[800],
-    marginBottom: Layout.spacing.md,
-  },
-  paymentMethod: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: Colors.white,
-    padding: Layout.spacing.lg,
-    borderRadius: Layout.borderRadius.lg,
-    marginBottom: Layout.spacing.md,
-    borderWidth: 2,
-    borderColor: Colors.gray[200],
-  },
-  selectedPaymentMethod: {
-    borderColor: Colors.primary[600],
-  },
-  paymentMethodInfo: {
-    marginLeft: Layout.spacing.md,
-  },
-  paymentMethodTitle: {
-    ...Fonts.subheading,
-    fontSize: 16,
-    color: Colors.gray[800],
-    marginBottom: 2,
-  },
-  paymentMethodDescription: {
-    ...Fonts.body,
-    fontSize: 14,
-    color: Colors.gray[500],
-  },
-  securePaymentNote: {
+  securityNote: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: Layout.spacing.xl,
+    gap: Layout.spacing.sm,
+    marginBottom: Layout.spacing.quadruple,
+    paddingVertical: Layout.spacing.md,
+    backgroundColor: Colors.surface,
+    borderRadius: Layout.borderRadius.md,
   },
-  securePaymentText: {
-    ...Fonts.caption,
-    color: Colors.gray[500],
-    marginLeft: Layout.spacing.xs,
+  securityText: {
+    ...Fonts.body3,
+    color: Colors.typography.primary,
+    fontSize: 13,
   },
-  footer: {
-    padding: Layout.spacing.lg,
-    backgroundColor: Colors.white,
-    borderTopWidth: 1,
-    borderTopColor: Colors.gray[200],
+  form: {
+    gap: Layout.spacing.double,
+  },
+  inputGroup: {
+    gap: Layout.spacing.sm,
+  },
+  label: {
+    ...Fonts.body2,
+    color: Colors.typography.primary,
+    fontSize: 14,
+  },
+  cardInputContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: Colors.entryField,
+    borderRadius: Layout.borderRadius.md,
+    paddingHorizontal: Layout.spacing.md,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+  cardInput: {
+    flex: 1,
+    paddingVertical: Layout.spacing.md,
+    color: Colors.typography.primary,
+    fontSize: 16,
+    marginLeft: Layout.spacing.sm,
+  },
+  input: {
+    backgroundColor: Colors.entryField,
+    borderRadius: Layout.borderRadius.md,
+    paddingHorizontal: Layout.spacing.md,
+    paddingVertical: Layout.spacing.md,
+    color: Colors.typography.primary,
+    fontSize: 16,
+    borderWidth: 1,
+    borderColor: Colors.border,
+  },
+  row: {
+    flexDirection: 'row',
+    gap: Layout.spacing.md,
+  },
+  halfWidth: {
+    flex: 1,
   },
   payButton: {
-    backgroundColor: Colors.primary[600],
+    backgroundColor: Colors.primary,
     paddingVertical: Layout.spacing.md,
     borderRadius: Layout.borderRadius.md,
-    alignItems: 'center',
-  },
-  payButtonDisabled: {
-    backgroundColor: Colors.gray[400],
+    marginTop: Layout.spacing.md,
   },
   payButtonText: {
     ...Fonts.button,
-    color: Colors.white,
+    color: Colors.typography.primary,
+    textAlign: 'center',
     fontSize: 16,
+  },
+  termsText: {
+    ...Fonts.body5,
+    color: Colors.typography.secondary,
+    textAlign: 'center',
+    fontSize: 10,
+    opacity: 0.8,
   },
 }); 

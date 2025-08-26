@@ -5,28 +5,17 @@ import Layout from '@/constants/Layout';
 import Fonts from '@/constants/Fonts';
 import { Settings, LogOut, Heart, Clock, BookOpen, Award, ChevronRight, X, Search, ShoppingBag } from 'lucide-react-native';
 
-type MenuItem = {
-  id: string;
-  title: string;
-  icon: any;
-  onPress: () => void;
-};
-
-type Props = {
-  onClose: () => void;
-};
-
-export default function SideMenu({ onClose }: Props) {
+export default function SideMenu({ onClose }: { onClose: () => void }) {
   const handleLogout = () => {
     router.replace('/auth/verify-age');
   };
 
-  const menuItems: MenuItem[] = [
+  const menuItems = [
     {
       id: '1',
       title: 'Discover',
       icon: Search,
-      onPress: () => router.push('/screens/search'),
+      onPress: () => router.push('/search'),
     },
     {
       id: '2',
@@ -51,15 +40,12 @@ export default function SideMenu({ onClose }: Props) {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <TouchableOpacity 
-          style={styles.closeButton}
-          onPress={onClose}
-        >
-          <X size={24} color={Colors.gray[800]} />
+        <TouchableOpacity style={styles.closeButton} onPress={onClose}>
+          <X size={24} color={Colors.typography.primary} />
         </TouchableOpacity>
       </View>
 
-      <ScrollView style={styles.content}>
+      <ScrollView style={styles.content} showsVerticalScrollIndicator={false}>
         {menuItems.map((item) => (
           <TouchableOpacity
             key={item.id}
@@ -71,11 +57,11 @@ export default function SideMenu({ onClose }: Props) {
           >
             <View style={styles.menuItemContent}>
               <View style={styles.iconContainer}>
-                <item.icon size={24} color={Colors.gray[700]} />
+                <item.icon size={24} color={Colors.primary} />
               </View>
               <Text style={styles.menuItemText}>{item.title}</Text>
             </View>
-            <ChevronRight size={20} color={Colors.gray[400]} />
+            <ChevronRight size={20} color={Colors.typography.secondary} />
           </TouchableOpacity>
         ))}
 
@@ -98,54 +84,56 @@ export default function SideMenu({ onClose }: Props) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.background,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'flex-end',
-    paddingHorizontal: Layout.spacing.lg,
-    paddingTop: Layout.spacing.xl,
+    paddingTop: Layout.spacing.triple,
+    paddingHorizontal: Layout.spacing.double,
     paddingBottom: Layout.spacing.md,
-    borderBottomWidth: 1,
-    borderBottomColor: Colors.gray[200],
   },
   closeButton: {
     padding: Layout.spacing.sm,
   },
   content: {
     flex: 1,
-    paddingTop: Layout.spacing.lg,
+    paddingHorizontal: Layout.spacing.double,
   },
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: Layout.spacing.md,
-    paddingHorizontal: Layout.spacing.lg,
     justifyContent: 'space-between',
+    paddingVertical: Layout.spacing.md,
+    paddingHorizontal: Layout.spacing.md,
+    marginBottom: Layout.spacing.sm,
+    backgroundColor: Colors.surface,
+    borderRadius: Layout.borderRadius.md,
   },
   menuItemContent: {
     flexDirection: 'row',
     alignItems: 'center',
+    flex: 1,
   },
   iconContainer: {
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: Colors.gray[100],
+    backgroundColor: Colors.entryField,
     justifyContent: 'center',
     alignItems: 'center',
     marginRight: Layout.spacing.md,
   },
+  logoutIcon: {
+    backgroundColor: Colors.error,
+  },
   menuItemText: {
-    ...Fonts.body,
+    ...Fonts.body2,
+    color: Colors.typography.primary,
     fontSize: 16,
-    color: Colors.gray[800],
   },
   logoutButton: {
-    marginTop: Layout.spacing.xl,
-  },
-  logoutIcon: {
-    backgroundColor: Colors.error + '10',
+    marginTop: Layout.spacing.double,
   },
   logoutText: {
     color: Colors.error,

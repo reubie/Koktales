@@ -47,7 +47,7 @@ export default function CocktailCard({ cocktail, horizontal = false, showLock = 
         <Image source={{ uri: cocktail.image }} style={styles.image} />
         {showLock && !hasAccess && (
           <View style={styles.lockOverlay}>
-            <Lock size={32} color={Colors.white} />
+            <Lock size={32} color={Colors.typography.primary} />
             <Text style={styles.lockText}>Unlock to view</Text>
           </View>
         )}
@@ -58,15 +58,15 @@ export default function CocktailCard({ cocktail, horizontal = false, showLock = 
         >
           <Heart
             size={20}
-            color={isFavorite ? Colors.secondary[500] : Colors.white}
-            fill={isFavorite ? Colors.secondary[500] : 'transparent'}
+            color={isFavorite ? Colors.primary : Colors.typography.primary}
+            fill={isFavorite ? Colors.primary : 'transparent'}
           />
         </TouchableOpacity>
         <View style={styles.content}>
           <Text style={styles.name}>{cocktail.name}</Text>
           <View style={styles.detailsRow}>
             <View style={styles.timeContainer}>
-              <Clock size={14} color={Colors.gray[500]} />
+              <Clock size={14} color={Colors.typography.secondary} />
               <Text style={styles.timeText}>{cocktail.preparationTime}</Text>
             </View>
             {cocktail.type === 'premium' && (
@@ -89,7 +89,7 @@ export default function CocktailCard({ cocktail, horizontal = false, showLock = 
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: Colors.white,
+    backgroundColor: Colors.typography.primary,
     borderRadius: Layout.borderRadius.lg,
     overflow: 'hidden',
     marginRight: Layout.spacing.lg,
@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
   },
   lockText: {
     ...Fonts.button,
-    color: Colors.white,
+    color: Colors.typography.primary,
     marginTop: 8,
     fontSize: 16,
   },
@@ -141,9 +141,9 @@ const styles = StyleSheet.create({
     padding: Layout.spacing.md,
   },
   name: {
-    ...Fonts.subheading,
+    ...Fonts.headline3,
     fontSize: 16,
-    color: Colors.gray[800],
+    color: Colors.typography.secondary,
     marginBottom: Layout.spacing.xs,
   },
   detailsRow: {
@@ -157,18 +157,18 @@ const styles = StyleSheet.create({
   },
   timeText: {
     ...Fonts.caption,
-    color: Colors.gray[500],
+    color: Colors.typography.secondary,
     marginLeft: 4,
   },
   premiumContainer: {
-    backgroundColor: Colors.primary[600],
+    backgroundColor: Colors.primary,
     paddingHorizontal: Layout.spacing.sm,
     paddingVertical: Layout.spacing.xs,
     borderRadius: Layout.borderRadius.full,
   },
   premiumText: {
     ...Fonts.caption,
-    color: Colors.white,
+    color: Colors.typography.primary,
     fontSize: 12,
   },
 });
