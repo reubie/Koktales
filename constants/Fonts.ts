@@ -4,11 +4,14 @@ export const Fonts: {
   headline: TextStyle;
   headline2: TextStyle;
   headline3: TextStyle;
+  heading: TextStyle;
+  subheading: TextStyle;
   body1: TextStyle;
   body2: TextStyle;
   body3: TextStyle;
   body4: TextStyle;
   body5: TextStyle;
+  body: TextStyle;
   button: TextStyle;
   caption: TextStyle;
 } = {
@@ -17,6 +20,18 @@ export const Fonts: {
     fontSize: 36,
     lineHeight: 40, // 110% of 36
     letterSpacing: -1.62, // -4.5% of 36
+  },
+  heading: {
+    fontFamily: 'Roboto-Bold',
+    fontSize: 28,
+    lineHeight: 32, // 114% of 28
+    letterSpacing: -0.98, // -3.5% of 28
+  },
+  subheading: {
+    fontFamily: 'Roboto-Medium',
+    fontSize: 18,
+    lineHeight: 22, // 122% of 18
+    letterSpacing: -0.54, // -3% of 18
   },
   headline2: {
     fontFamily: 'Roboto-Bold',
@@ -31,6 +46,12 @@ export const Fonts: {
     letterSpacing: -0.7, // -3.5% of 20
   },
   body1: {
+    fontFamily: 'Roboto',
+    fontSize: 16,
+    lineHeight: 19, // 120% of 16
+    letterSpacing: -0.24, // -1.5% of 16
+  },
+  body: {
     fontFamily: 'Roboto',
     fontSize: 16,
     lineHeight: 19, // 120% of 16

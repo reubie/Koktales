@@ -62,7 +62,7 @@ const styles = StyleSheet.create({
     marginRight: Layout.spacing.sm,
   },
   input: {
-    ...Fonts.body,
+    fontFamily: 'Roboto',
     flex: 1,
     fontSize: 16,
     color: Colors.typography.secondary,
