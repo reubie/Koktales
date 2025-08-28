@@ -2,7 +2,6 @@ import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'rea
 import { router } from 'expo-router';
 import Colors from '@/constants/Colors';
 import Layout from '@/constants/Layout';
-import Fonts from '@/constants/Fonts';
 import { Bookmark } from 'lucide-react-native';
 
 const articles = [
@@ -85,24 +84,25 @@ const styles = StyleSheet.create({
     marginBottom: Layout.spacing.sm,
   },
   category: {
-    ...Fonts.caption,
-          color: Colors.primary,
+    fontFamily: 'Roboto',
     fontSize: 12,
+    color: Colors.primary,
   },
-      title: {
-      ...Fonts.headline3,
-      fontSize: 18,
-      color: Colors.typography.primary,
-      marginBottom: Layout.spacing.sm,
-    },
+  title: {
+    fontFamily: 'Roboto-Bold',
+    fontSize: 18,
+    color: Colors.typography.primary,
+    marginBottom: Layout.spacing.sm,
+  },
   description: {
-    ...Fonts.body1,
+    fontFamily: 'Roboto',
+    fontSize: 16,
     color: Colors.typography.secondary,
     marginBottom: Layout.spacing.md,
   },
   readTime: {
-    ...Fonts.caption,
-    color: Colors.typography.secondary,
+    fontFamily: 'Roboto',
     fontSize: 12,
+    color: Colors.typography.secondary,
   },
 }); 

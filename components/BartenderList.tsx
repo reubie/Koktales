@@ -2,7 +2,6 @@ import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-nati
 import { router } from 'expo-router';
 import Colors from '@/constants/Colors';
 import Layout from '@/constants/Layout';
-import Fonts from '@/constants/Fonts';
 import { User, MapPin } from 'lucide-react-native';
 
 export default function BartenderList() {
@@ -66,7 +65,8 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   name: {
-    ...Fonts.headline3,
+    fontFamily: 'Roboto-Bold',
+    fontSize: 20,
     color: Colors.typography.primary,
     marginBottom: Layout.spacing.xs,
   },
@@ -76,13 +76,14 @@ const styles = StyleSheet.create({
     marginBottom: Layout.spacing.xs,
   },
   location: {
-    ...Fonts.body3,
+    fontFamily: 'Roboto',
+    fontSize: 13,
     color: Colors.typography.secondary,
     marginLeft: Layout.spacing.xs,
   },
   experience: {
-    ...Fonts.body3,
-    color: Colors.primary,
+    fontFamily: 'Roboto',
     fontSize: 12,
+    color: Colors.primary,
   },
 });

@@ -14,6 +14,7 @@ import FontAwesome from '@expo/vector-icons/FontAwesome';
 import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
 import { useColorScheme } from 'react-native';
 import { SubscriptionProvider } from '@/context/SubscriptionContext';
+import { ShoppingListProvider } from '@/context/ShoppingListContext';
 
 // Prevent splash screen from auto-hiding
 SplashScreen.preventAutoHideAsync();
@@ -48,76 +49,85 @@ function RootLayoutNav() {
 
   return (
     <SubscriptionProvider>
-      <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-        <Stack screenOptions={{ headerShown: false }}>
-          <Stack.Screen 
-            name="index" 
-            options={{ 
-              animation: 'fade'
-            }} 
-          />
-          <Stack.Screen 
-            name="auth/verify-age" 
-            options={{ 
-              animation: 'fade'
-            }} 
-          />
-          <Stack.Screen 
-            name="auth/login" 
-            options={{ 
-              animation: Platform.OS === 'android' ? 'fade' : 'default'
-            }} 
-          />
-          <Stack.Screen 
-            name="auth/signup" 
-            options={{ 
-              animation: Platform.OS === 'android' ? 'fade' : 'default'
-            }} 
-          />
-          <Stack.Screen 
-            name="auth/forgot-password" 
-            options={{ 
-              animation: Platform.OS === 'android' ? 'fade' : 'default'
-            }} 
-          />
-          <Stack.Screen 
-            name="subscription" 
-            options={{ 
-              animation: Platform.OS === 'android' ? 'fade' : 'default'
-            }} 
-          />
-          <Stack.Screen 
-            name="onboarding" 
-            options={{ 
-              animation: 'fade'
-            }} 
-          />
-          <Stack.Screen 
-            name="(tabs)" 
-            options={{ 
-              headerShown: false,
-              animation: Platform.OS === 'android' ? 'fade' : 'default'
-            }} 
-          />
-          <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-          <Stack.Screen name="payment/index" options={{ title: 'Payment' }} />
-          <Stack.Screen 
-            name="cocktail/[id]" 
-            options={{ 
-              title: 'Cocktail Details',
-              headerBackTitle: 'Back'
-            }} 
-          />
-          <Stack.Screen name="+not-found" />
-          <Stack.Screen name="categories/index" />
-          <Stack.Screen name="categories/[id]" />
-          <Stack.Screen name="classics" />
-          <Stack.Screen name="popular" />
-          <Stack.Screen name="search" />
-          <Stack.Screen name="articles/[id]" />
-          <Stack.Screen name="search/filters" />
-        </Stack>
-      </ThemeProvider>
+      <ShoppingListProvider>
+        <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
+          <Stack screenOptions={{ headerShown: false }}>
+            <Stack.Screen 
+              name="index" 
+              options={{ 
+                animation: 'fade'
+              }} 
+            />
+            <Stack.Screen 
+              name="auth/verify-age" 
+              options={{ 
+                animation: 'fade'
+              }} 
+            />
+            <Stack.Screen 
+              name="auth/login" 
+              options={{ 
+                animation: Platform.OS === 'android' ? 'fade' : 'default'
+              }} 
+            />
+            <Stack.Screen 
+              name="auth/signup" 
+              options={{ 
+                animation: Platform.OS === 'android' ? 'fade' : 'default'
+              }} 
+            />
+            <Stack.Screen 
+              name="auth/forgot-password" 
+              options={{ 
+                animation: Platform.OS === 'android' ? 'fade' : 'default'
+              }} 
+            />
+            <Stack.Screen 
+              name="subscription" 
+              options={{ 
+                animation: 'fade'
+              }} 
+            />
+            <Stack.Screen 
+              name="onboarding" 
+              options={{ 
+                animation: 'fade'
+              }} 
+            />
+            <Stack.Screen 
+              name="(tabs)" 
+              options={{ 
+                headerShown: false,
+                animation: Platform.OS === 'android' ? 'fade' : 'default'
+              }} 
+            />
+            <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+            <Stack.Screen name="payment/index" options={{ title: 'Payment' }} />
+            <Stack.Screen 
+              name="cocktail/[id]" 
+              options={{ 
+                title: 'Cocktail Details',
+                headerBackTitle: 'Back'
+              }} 
+            />
+            <Stack.Screen 
+              name="cocktail/[id]/steps" 
+              options={{ 
+                title: 'Cocktail Steps',
+                headerBackTitle: 'Back'
+              }} 
+            />
+            <Stack.Screen name="+not-found" />
+            <Stack.Screen name="categories/index" />
+            <Stack.Screen name="categories/[id]" />
+            <Stack.Screen name="classics" />
+            <Stack.Screen name="popular" />
+            <Stack.Screen name="search" />
+            <Stack.Screen name="articles/[id]" />
+            <Stack.Screen name="search/filters" />
+          </Stack>
+        </ThemeProvider>
+      </ShoppingListProvider>
     </SubscriptionProvider>
   );
 }

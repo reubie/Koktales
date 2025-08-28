@@ -1,7 +1,6 @@
 import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from 'react-native';
 import Colors from '@/constants/Colors';
 import Layout from '@/constants/Layout';
-import Fonts from '@/constants/Fonts';
 import { MapPin, Clock, Star } from 'lucide-react-native';
 
 export default function BarList() {
@@ -55,7 +54,8 @@ const styles = StyleSheet.create({
     marginBottom: Layout.spacing.sm,
   },
   barName: {
-    ...Fonts.headline3,
+    fontFamily: 'Roboto-Bold',
+    fontSize: 20,
     color: Colors.typography.primary,
     flex: 1,
   },
@@ -65,9 +65,9 @@ const styles = StyleSheet.create({
     gap: Layout.spacing.xs,
   },
   ratingText: {
-    ...Fonts.body3,
-    color: Colors.primary,
+    fontFamily: 'Roboto',
     fontSize: 14,
+    color: Colors.primary,
   },
   locationContainer: {
     flexDirection: 'row',
@@ -75,7 +75,8 @@ const styles = StyleSheet.create({
     marginBottom: Layout.spacing.xs,
   },
   locationText: {
-    ...Fonts.body3,
+    fontFamily: 'Roboto',
+    fontSize: 13,
     color: Colors.typography.secondary,
     marginLeft: Layout.spacing.xs,
   },
@@ -84,7 +85,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   hoursText: {
-    ...Fonts.body3,
+    fontFamily: 'Roboto',
+    fontSize: 13,
     color: Colors.typography.secondary,
     marginLeft: Layout.spacing.xs,
   },

@@ -1,10 +1,8 @@
 import { useState } from 'react';
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { router } from 'expo-router';
 import Colors from '@/constants/Colors';
 import Layout from '@/constants/Layout';
-import Fonts from '@/constants/Fonts';
 import SearchBar from '@/components/SearchBar';
 import BartenderList from '@/components/BartenderList';
 import BarList from '@/components/BarList';
@@ -15,7 +13,7 @@ export default function DiscoverScreen() {
   const [activeTab, setActiveTab] = useState<'bars' | 'bartenders' | 'articles'>('bars');
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.title}>Discover</Text>
         <TouchableOpacity 
@@ -67,7 +65,7 @@ export default function DiscoverScreen() {
           <ArticleList />
         )}
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 

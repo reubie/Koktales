@@ -1,6 +1,7 @@
 import { ScrollView, View, Text, StyleSheet, TouchableOpacity, Image, StatusBar } from 'react-native';
 import { useState } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { router } from 'expo-router';
 import Colors from '@/constants/Colors';
 import Layout from '@/constants/Layout';
 import Fonts from '@/constants/Fonts';
@@ -194,7 +195,11 @@ export default function HomeScreen() {
           
           <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.followingScroll}>
             {featuredCocktails.map((cocktail) => (
-              <TouchableOpacity key={cocktail.id} style={styles.followingCard}>
+              <TouchableOpacity 
+                key={cocktail.id} 
+                style={styles.followingCard}
+                onPress={() => router.push(`/cocktail/${cocktail.id}`)}
+              >
                 <Image source={{ uri: cocktail.image }} style={styles.followingCardImage} />
                 <View style={styles.followingCardOverlay}>
                   <View style={styles.cardIcons}>
@@ -260,9 +265,13 @@ export default function HomeScreen() {
             ))}
           </ScrollView>
           
-          <View style={styles.cocktailsGrid}>
-            {cocktailList.map((cocktail) => (
-              <TouchableOpacity key={cocktail.id} style={styles.cocktailCard}>
+                  <View style={styles.cocktailsGrid}>
+          {cocktailList.map((cocktail) => (
+            <TouchableOpacity 
+              key={cocktail.id} 
+              style={styles.cocktailCard}
+              onPress={() => router.push(`/cocktail/${cocktail.id}`)}
+            >
                 <Image source={{ uri: cocktail.image }} style={styles.cocktailCardImage} />
                 <View style={styles.cocktailCardOverlay}>
                   <View style={styles.cardIcons}>

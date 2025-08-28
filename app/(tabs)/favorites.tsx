@@ -1,8 +1,6 @@
 import { View, Text, StyleSheet, ScrollView, TouchableOpacity, StatusBar } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import Colors from '@/constants/Colors';
 import Layout from '@/constants/Layout';
-import Fonts from '@/constants/Fonts';
 import { Heart } from 'lucide-react-native';
 
 export default function FavoritesScreen() {
@@ -14,7 +12,7 @@ export default function FavoritesScreen() {
   ];
 
   return (
-    <SafeAreaView style={styles.container}>
+    <View style={styles.container}>
       <StatusBar barStyle="light-content" backgroundColor={Colors.background} />
       
       <View style={styles.header}>
@@ -41,7 +39,7 @@ export default function FavoritesScreen() {
           </View>
         )}
       </ScrollView>
-    </SafeAreaView>
+    </View>
   );
 }
 
